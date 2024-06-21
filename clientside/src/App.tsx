@@ -1,34 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import MainContent from './pages/main/MainContent';
+import Transaction from './pages/Transaction/Transaction';
+import Send from './pages/action/Send';
+import Request from './pages/action/Request';
+import Invites from './pages/invitess/Invites';
+import Deposit from './pages/action/Deposit';
+import Sidebar from './layout/Sidebar';
+import Connect from './pages/connect/Connect';
+import NavbarWrapper from './context/NavbarWrapper';
 
-function App() {
-  const [count, setCount] = useState(0)
 
+const App  = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <NavbarWrapper>
+      <Sidebar/>
+      </NavbarWrapper>
+      
+      <Routes>
+        <Route index element={<MainContent/>}/>
+        <Route path='/connect' element={<Connect/>}/>
+        <Route path='/transaction' element={<Transaction/>}/>
+        <Route path='/send' element={<Send/>}/>
+        <Route path='/request' element={<Request/>}/>
+        <Route path='/invite' element={<Invites/>}/>
+        <Route path='/deposit' element={<Deposit/>}/>        
+      </Routes>
+    </Router>
   )
 }
 
