@@ -1,0 +1,290 @@
+import { Injectable, Logger } from '@nestjs/common';
+import * as TelegramBot from 'node-telegram-bot-api';
+import { welcomeMessageMarkup, allFeaturesMarkup, pdFDetails } from './markups';
+
+const TELEGRAM_TOKEN = '7080447298:AAEPhCEaj5Ih2iLk1F1hAnoC2sMClJDkbqY';
+@Injectable()
+export class BotService {
+  private readonly bot: TelegramBot;
+  private logger = new Logger(BotService.name);
+  private pdfUrlUploadPrompt = {};
+  private pdfUploadPrompt = {};
+  private startedChatting = {};
+  private usedCodes = [];
+
+  constructor() {
+    // private readonly ragService: RagService, // private readonly databaseService: DatabaseService,
+    this.bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
+    // event listerner for incomning messages
+    this.bot.on('message', this.handleRecievedMessages);
+
+    // event Listerner for button requests
+    this.bot.on('callback_query', this.handleButtonCommands);
+  }
+
+  handleRecievedMessages = async (msg: any) => {
+    this.logger.debug(msg);
+    try {
+      if (msg.document) {
+        if (
+          msg.document['mime_type'] == 'application/pdf' &&
+          this.pdfUploadPrompt
+        ) {
+          await this.bot.sendMessage(
+            msg.chat.id,
+            '⏳ Request Processing .....',
+          );
+
+          return;
+        }
+      } else {
+        const command = msg.text;
+        console.log('Command :', command);
+        if (command === '/start') {
+          const username = `${msg.from.username}`;
+          const welcome = await welcomeMessageMarkup(username);
+          if (welcome) {
+            const replyMarkup = {
+              inline_keyboard: welcome.keyboard,
+            };
+            await this.bot.sendMessage(msg.chat.id, welcome.message, {
+              reply_markup: replyMarkup,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  handleButtonCommands = async (query: any) => {
+    this.logger.debug(query);
+    let command: string;
+    let sourceId: string;
+    const first_name = query.from.first_name;
+    // const last_name = query.from.last_name;
+    // const user_Id = query.from.id;
+    const username = `${first_name}`;
+
+    // function to check if query.data is a json type
+    function isJSON(str) {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (isJSON(query.data)) {
+      command = JSON.parse(query.data).command;
+      sourceId = JSON.parse(query.data).sourceId;
+    } else {
+      command = query.data;
+    }
+
+    const chatId = query.message.chat.id;
+    // const userId = query.from.id;
+
+    try {
+      switch (command) {
+        case '/getStarted':
+          await this.bot.sendMessage(chatId, '⏳ Request Processing .....');
+          const uniqueCode = await this.generateNkowaId();
+          let userNkowaId = 0;
+          //   if (uniqueCode) {
+          //     const user = await this.saveUserToDB({
+          //       chat_id: chatId,
+          //       nkowa_id: uniqueCode,
+          //     });
+          //     if (user) {
+          //       userNkowaId = user.nkowa_id;
+          //     }
+          //     await this.sendAllFeature(chatId, username, userNkowaId);
+          //     return;
+          //   }
+          await this.sendAllFeature(chatId, username, userNkowaId);
+          return;
+
+        case '/fileUploadUrl':
+          await this.fileUploadByUrlPrompt(chatId);
+          if (this.startedChatting[chatId].chat) {
+            delete this.startedChatting[chatId];
+            return;
+          }
+          return;
+
+        case '/fileUpload':
+          await this.fileUploadPrompt(chatId);
+          if (this.startedChatting[chatId].chat) {
+            delete this.startedChatting[chatId];
+            return;
+          }
+          return;
+
+        // case '/summary':
+        //   try {
+        //     await this.bot.sendMessage(chatId, '⏳ Request Processing .....');
+        //     const summary = await this.ragService.getSummary(sourceId);
+        //     if (summary) {
+        //       return this.bot.sendMessage(chatId, summary.summary);
+        //     } else {
+        //       return this.bot.sendMessage(chatId, 'Error processing summary');
+        //     }
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
+
+        case '/chatPdf':
+          try {
+            const prompt = this.bot.sendMessage(
+              chatId,
+              'Start chatting 💬 ...',
+            );
+            if (prompt) {
+              // trigger start chat
+              return (this.startedChatting[chatId] = {
+                sourceId: sourceId,
+                chat: true,
+              });
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+        // case '/viewFiles':
+        //   try {
+        //     await this.bot.sendMessage(chatId, '⏳ Request Processing .....');
+        //     const allFiles = await this.databaseService.pdf.findMany({
+        //       where: { owner: chatId },
+        //     });
+        //     if (allFiles) {
+        //       const allFilesArray = [...allFiles];
+        //       if (allFilesArray.length == 0) {
+        //         return this.bot.sendMessage(
+        //           chatId,
+        //           '❓ Your PDF list is empty',
+        //         );
+        //       } else {
+        //         allFilesArray.map(async (file) => {
+        //           try {
+        //             const pdfDetail = await pdFDetails(
+        //               file.name,
+        //               file.url,
+        //               file.sourceId,
+        //             );
+        //             if (pdfDetail) {
+        //               const Markup = {
+        //                 inline_keyboard: pdfDetail.keyboard,
+        //               };
+
+        //               await this.bot.sendMessage(chatId, file.name, {
+        //                 reply_markup: Markup,
+        //               });
+        //             } else {
+        //               return;
+        //             }
+        //           } catch (error) {
+        //             console.log(error);
+        //           }
+        //         });
+        //       }
+        //     }
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
+
+        default:
+          return await this.bot.sendMessage(
+            query.message.chat.id,
+            `Processing command failed, please try again`,
+          );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  sendAllFeature = async (chatId: any, username: string, nkowaId: any) => {
+    try {
+      const allFeatures = await allFeaturesMarkup(username, nkowaId);
+      if (allFeatures) {
+        const replyMarkup = {
+          inline_keyboard: allFeatures.keyboard,
+        };
+        await this.bot.sendMessage(chatId, allFeatures.message, {
+          parse_mode: 'HTML',
+          reply_markup: replyMarkup,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fileUploadByUrlPrompt = async (chatId: any) => {
+    try {
+      const uploadUrlPrompt = await this.bot.sendMessage(
+        chatId,
+        'Input the PDF url 🔗: make sure it is viewable',
+        { reply_markup: { force_reply: true } },
+      );
+      if (uploadUrlPrompt) {
+        this.pdfUrlUploadPrompt[chatId] = [uploadUrlPrompt.message_id];
+        return;
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fileUploadPrompt = async (chatId: any) => {
+    try {
+      const uploadPrompt = await this.bot.sendMessage(
+        chatId,
+        'Upload a PDF file 🔗: make sure it is less than 5mb',
+        { reply_markup: { force_reply: true } },
+      );
+      if (uploadPrompt) {
+        this.pdfUploadPrompt[chatId] = [uploadPrompt.message_id];
+        return;
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Method to  save a new userdata to the database
+  //   async saveUserToDB(saveUserDto: Prisma.UserCreateInput) {
+  //     try {
+  //       const isSaved = await this.databaseService.user.findFirst({
+  //         where: { chat_id: saveUserDto.chat_id },
+  //       });
+  //       if (!isSaved) {
+  //         return this.databaseService.user.create({ data: saveUserDto });
+  //       }
+  //       return isSaved;
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+
+  generateNkowaId = async () => {
+    // Generate a random 4-digit number
+    let code = Math.floor(1000 + Math.random() * 9000);
+
+    // Check if the code is already in use
+    // If yes, generate a new one until it's unique
+    while (this.usedCodes.includes(code)) {
+      code = Math.floor(1000 + Math.random() * 9000);
+    }
+
+    // Add the code to the list of used codes
+    this.usedCodes.push(code);
+
+    return code;
+  };
+}
