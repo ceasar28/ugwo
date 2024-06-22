@@ -1,14 +1,62 @@
-import React from 'react'
+import {useState} from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
+import { sidebar } from '../pages/utilites/data/data';
+import left from '../../../clientside/src/assets/left.svg'
+import right from '../../../clientside/src/assets/right.svg'
+import Logo from '../../../clientside/src/assets/logo.svg'
 
-interface Props {
+
+
+
+const Sidebar = () => {
+    const navigate = useNavigate(); 
+    const [open, setOpen] = useState(true);
+
     
-}
-
-const Sidebar: React.FC<Props> = () => {
+      const toggleBar = () => {
+        setOpen(!open);
+      };
+    
+     
     return (
-        <div>
+          <div className='h-screen absolute top-0'>
+      <div className="flex  items-center">   
+       
             
+      </div>
+
+      <div style={{ width: open ? '200px' : '100px' }} className="w-[400px] h-screen bg-[--layer-color] p-8 fixed z-50 sm:block hidden">
+        <div className="flex items-center">
+          <div onClick={() => navigate('/overview')} className="cursor-pointer  flex items-center ">
+            <img src={Logo} alt="Logo" className="w-[5rem]" />
+            
+          </div>
+          <div onClick={toggleBar} className="absolute right-[-20px]">
+            {!open ? (
+              <img src={left} alt="Expand" className="bg-[--text-extra] rounded-2xl p-2 w-[35px]" />
+            ) : (
+              <img src={right} alt="Collapse" className="bg-[--text-extra] rounded-2xl p-2 w-[35px]" />
+            )}
+          </div>
         </div>
+        <div className="mt-14">
+      
+          {sidebar.map((item, index) => (
+            <NavLink to={item.path} key={index} className="flex bg-[--bg-color-color] items-center gap-2 py-3">             
+              <img src={item.icon} alt="" className="w-[25px]" />
+              <p style={{ display: open ? 'block' : 'none' }}>{item.name}</p>          
+            </NavLink>
+          ))}
+        </div>            
+      </div>
+
+          <div>
+          
+    
+          </div>
+     
+      
+    </div>
     )
 }
 

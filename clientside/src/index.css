@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  scroll-padding-top: 2rem;
+  scroll-behavior: smooth;
+  font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+html{
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+:root {
+  
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: '#121212';
+  background-color: #fff;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  
+  --text-extra:#ffff;
+  --text-color:#121212;
+  --bg-color: #1400FF;
+  --button-color: #FFC700;
+  --hover-color: #003e62;
+  --layer-color: #F6F6F6;
+  --layer-colo: #989898;
+  --layers-colo: #cfcfcf90;  
+  --tetra-color: #90f7d8;
+  --base-color: #750037;
+  --bases-color: #75003780;
+  --base-colors: #75003730;
+  
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center; 
+  overflow-x: hidden;
+}
+
+.active {
+  @apply text-[#FFC700]  font-bold  ;
+}
+
+.active img {
+  filter: invert(81%) sepia(79%) saturate(6528%) hue-rotate(320deg) brightness(90%) contrast(90%);
+
+}

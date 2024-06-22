@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Sidebar from '../layout/Sidebar';
+ import Sidebar from '../layout/Sidebar';
+import FloatingNavbar from '../layout/FloatingNavbar';
 
 interface Props {
     children: React.ReactNode;
@@ -8,45 +9,42 @@ interface Props {
 
 const NavbarWrapper = ({ children }: Props) => {
     const location = useLocation();
-   
+    const [showNavbar, setShowNavbar] = useState<boolean>(true);
     const [showSidebar, setShowSidebar] = useState<boolean>(true);
 
     useEffect(() => {
         const restrictedPaths = [
-            '/connect',
-            '/',
-         ];
+            '/mainContent',
+            '/connect', 
+        ];
 
         const showNavbarPaths = [
-            '/overview',
-            '/payment',
-            '/wallet',
-            '/company',
-            '/pin',
-            '/transfer',           
-            '/card',
-            '/address',            
-            '/loan',
+            '/dashboard',
+            '/transaction',
+            '/send',
+            '/request',
             '/deposit',
-            '/contactUs',
-            '/exchange',  
-            '/loan' ,
+            '/invoice',
+            '/transaction',
         ];
 
         if (restrictedPaths.includes(location.pathname)) {
+            setShowNavbar(false);
             setShowSidebar(false);
         } else if (showNavbarPaths.includes(location.pathname)) {
+            setShowNavbar(false);
             setShowSidebar(true);
         } else {
+            setShowNavbar(true);
             setShowSidebar(false);
         }
     }, [location]);
 
     return (
         <div>
-            
+            {showNavbar && <FloatingNavbar />}
             {showSidebar && <Sidebar />}
-            {!(!showSidebar) && children}
+            {!(!showNavbar || !showSidebar) && children}
         </div>
     );
 };
