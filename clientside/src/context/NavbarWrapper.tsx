@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
  import Sidebar from '../layout/Sidebar';
-import FloatingNavbar from '../layout/FloatingNavbar';
+
 
 interface Props {
     children: React.ReactNode;
@@ -25,7 +25,7 @@ const NavbarWrapper = ({ children }: Props) => {
             '/request',
             '/deposit',
             '/invoice',
-            '/transaction',
+             '/deposit',
         ];
 
         if (restrictedPaths.includes(location.pathname)) {
@@ -41,8 +41,7 @@ const NavbarWrapper = ({ children }: Props) => {
     }, [location]);
 
     return (
-        <div>
-            {showNavbar && <FloatingNavbar />}
+        <div>           
             {showSidebar && <Sidebar />}
             {!(!showNavbar || !showSidebar) && children}
         </div>

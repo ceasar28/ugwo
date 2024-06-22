@@ -58,10 +58,6 @@ body {
 }
 
 .active {
-  @apply text-[#FFC700]  font-bold  ;
+  @apply text-black  font-bold bg-[--text-extra] px-2 rounded-full ;
 }
 
-.active img {
-  filter: invert(81%) sepia(79%) saturate(6528%) hue-rotate(320deg) brightness(90%) contrast(90%);
-
-}

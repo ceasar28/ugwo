@@ -20,11 +20,7 @@ const Sidebar = () => {
      
     return (
           <div className='h-screen absolute top-0'>
-      <div className="flex  items-center">   
-       
-            
-      </div>
-
+     
       <div style={{ width: open ? '200px' : '100px' }} className="w-[400px] h-screen bg-[--layer-color] p-8 fixed z-50 sm:block hidden">
         <div className="flex items-center">
           <div onClick={() => navigate('/overview')} className="cursor-pointer  flex items-center ">
@@ -50,12 +46,14 @@ const Sidebar = () => {
         </div>            
       </div>
 
-          <div>
-          
-    
-          </div>
-     
-      
+      <div className="fixed bottom-0 w-full h-[5rem] bg-[--layer-color] flex items-center justify-center z-50 lg:hidden">
+  {sidebar.map((item, index) => (
+    <NavLink to={item.path} key={index} className="flex  items-center gap-2 py-3 justify-around w-full px-4">
+      <img src={item.icon} alt="" className="w-[25px]" />
+    </NavLink>
+  ))}
+</div>
+
     </div>
     )
 }

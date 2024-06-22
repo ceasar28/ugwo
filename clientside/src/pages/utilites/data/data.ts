@@ -1,7 +1,7 @@
 import Dashboard from '../../../assets/dashboard1.svg'
 import Invoice from '../../../assets/reciept1.svg'
 import Transaction from '../../../assets/transaction.svg'
-import Settings from '../../../assets/settings.svg'
+
 
 
 interface SidebarItem {
