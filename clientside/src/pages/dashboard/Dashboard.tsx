@@ -1,3 +1,4 @@
+import Action from './screen/Action'
 import Top from './screen/Top'
 import Transaction from './screen/Transaction'
 
@@ -9,6 +10,7 @@ const Dashboard = () => {
             <div className="grid justify-between">
                <div className="max-w-[120rem] grid justify-between py-10 gap-6 mx-4">
                     <Top/>
+                    <Action/>
                     <Transaction/>
                 </div>
             </div>            
