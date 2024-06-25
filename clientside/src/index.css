@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-hover {
+    @apply cursor-pointer bg-primary-100 text-primary-600 duration-500;
+  }
+}
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  scroll-padding-top: 2rem;
+  scroll-behavior: smooth;
+  font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+html{
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+:root {
+  
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: '#121212';
+  background-color: #fff;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  
+  --text-extra:#ffff;
+  --text-color:#121212;
+  --bg-color: #1400FF;
+  --button-color: #FFC700;
+  --hover-color: #003e62;
+  --layer-color: #F6F6F6;
+  --layer-colo: #989898;
+  --layers-colo: #cfcfcf90;  
+  --tetra-color: #90f7d8;
+  --base-color: #750037;
+  --bases-color: #75003780;
+  --base-colors: #75003730;
+  
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center; 
+  overflow-x: hidden;
+}
+
+/* .active {
+  @apply text-black  font-bold bg-[--text-extra] px-2 rounded-full ;
+}
+ */
+/* for smooth scrolling to hash links*/
+html {
+  scroll-behavior: smooth;
+  background-color: rgb(255,231,185);
+}
+
+/* CSS class for the transcript scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #f1f1f1; 
+}
+
+.custom-scrollbar {
+  scrollbar-face-color: #888;
+  scrollbar-track-color: #f1f1f1;
+}
+
+.expand-sidebar {
+  width: 16rem; /* Define the expanded width */
+  transition: width 0.3s ease; /* Add a transition for smooth animation */
+}
+
+.collapse-sidebar {
+  width: 4rem; /* Define the collapsed width */
+  transition: width 0.3s ease; /* Add a transition for smooth animation */
+}
