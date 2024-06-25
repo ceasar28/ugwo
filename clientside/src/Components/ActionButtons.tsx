@@ -21,8 +21,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ handleModalOpen }) => (
           className='p-6 rounded-lg bg-white text-black-600'
           onClick={() => handleModalOpen('viewAssets')}
         >
-          <FontAwesomeIcon icon={faWallet} className='text-red-600 text-3xl' />
-          <div className='text-bold text-2 font-bold'>View Assets</div>
+          <FontAwesomeIcon icon={faWallet} className='text-red-600 text-2xl' />
+          <div className='text-bold text-2 '>View Assets</div>
         </Button>
       </div>
       <div className='flex-shrink-0'>
@@ -30,8 +30,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ handleModalOpen }) => (
           className='p-6 rounded-lg bg-white text-black-600'
           onClick={() => handleModalOpen('invoice')}
         >
-          <FontAwesomeIcon icon={faFileInvoiceDollar} className='text-blue-600 text-3xl' />
-          <div className='text-bold text-2 font-bold'>Invoice</div>
+          <FontAwesomeIcon icon={faFileInvoiceDollar} className='text-blue-600 text-2xl' />
+          <div className='text-bold text-2 '>Invoice</div>
         </Button>
       </div>
       <div className='flex-shrink-0'>
@@ -39,8 +39,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ handleModalOpen }) => (
           className='p-6 rounded-lg bg-white text-black-600'
           onClick={() => handleModalOpen('fund')}
         >
-          <FontAwesomeIcon icon={faDollarSign} className='text-green-600 text-3xl' />
-          <div className='text-bold text-2 font-bold'>Fund</div>
+          <FontAwesomeIcon icon={faDollarSign} className='text-green-600 text-2xl' />
+          <div className='text-bold text-2 '>Fund</div>
         </Button>
       </div>
       <div className='flex-shrink-0'>
@@ -48,8 +48,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ handleModalOpen }) => (
           className='p-6 rounded-lg bg-white text-black-600'
           onClick={() => handleModalOpen('withdraw')}
         >
-          <FontAwesomeIcon icon={faArrowDown} className='text-purple-600 text-3xl' />
-          <div className='text-bold text-2 font-bold'>Withdraw</div>
+          <FontAwesomeIcon icon={faArrowDown} className='text-purple-600 text-2xl' />
+          <div className='text-bold text-2 '>Withdraw</div>
         </Button>
       </div>
       <div className='flex-shrink-0'>
@@ -57,8 +57,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ handleModalOpen }) => (
           className='p-6 rounded-lg bg-white text-black-600'
           onClick={() => handleModalOpen('inviteFriends')}
         >
-          <FontAwesomeIcon icon={faUserFriends} className='text-yellow-600 text-3xl' />
-          <div className='text-bold text-2 font-bold'>Invite Friends</div>
+          <FontAwesomeIcon icon={faUserFriends} className='text-yellow-600 text-2xl' />
+          <div className='text-bold text-2 '>Invite Friends</div>
         </Button>
       </div>
     </div>

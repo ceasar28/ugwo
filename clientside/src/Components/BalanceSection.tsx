@@ -66,7 +66,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({ balanceUSD, ethValue, c
           {showBalance ? `${selectedCurrency} ${getConvertedBalance()}` : '•••••'}
         </div>
       </div>
-      <div className='text-h6 text-gray-400 mb-4'>
+      <div className='text-h6 font-bold text-gray-400 mb-4'>
         {showBalance ? `${ethValue} ETH` : ''}
       </div>
       <div className='flex justify-between w-full max-w-md text-center mt-2'>
