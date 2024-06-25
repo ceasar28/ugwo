@@ -6,7 +6,6 @@ import WithdrawSection from '../../Components/WithdrawSection';
 import TransactionsList from '../../Components/TransactionsList';
 import Modal from '../../Components/Modal';
 
-
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>('0');
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -43,14 +42,20 @@ const Dashboard: React.FC = () => {
   return (
     <div className='min-h-screen bg-primary-100 font-Inter mb-20'>
       <main className='p-6 flex flex-col items-center'>
-        <BalanceSection balanceUSD={balanceUSD} ethValue={ethValue} conversionRates={conversionRates} />
-       
-        <ActionButtons handleModalOpen={handleModalOpen} />
+        <BalanceSection
+          balanceUSD={balanceUSD}
+          ethValue={ethValue}
+          conversionRates={conversionRates}
+        />
+
+        <ActionButtons />
         <FundSection handleModalOpen={handleModalOpen} />
         <WithdrawSection handleModalOpen={handleModalOpen} />
         <TransactionsList />
       </main>
-      {activeModal && <Modal activeModal={activeModal} handleModalClose={handleModalClose} />}
+      {activeModal && (
+        <Modal activeModal={activeModal} handleModalClose={handleModalClose} />
+      )}
     </div>
   );
 };
