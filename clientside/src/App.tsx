@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes, Link } from 'react-router-dom';
-import MainContent from './pages/main/MainContent';
-import Transaction from './pages/Transaction/Transaction';
-import Send from './pages/action/Send';
-import Request from './pages/action/Request';
-import Invites from './pages/invitess/Invites';
-import Deposit from './pages/action/Deposit';
-//import Sidebar from './layout/Sidebar';
-import Connect from './pages/connect/Connect';
-//import NavbarWrapper from './context/NavbarWrapper';
-//import FloatingNavbar from './layout/FloatingNavbar';
-import Dashboard from './pages/dashboard/Dashboard';
-import logoImage from './assets/material-symbols_robot.png';
 import Home from './pages/Home/Home';
 import Wallet from './pages/Wallet/Wallet';
 

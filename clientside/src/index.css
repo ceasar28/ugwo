@@ -32,7 +32,6 @@ html{
 
   color-scheme: light dark;
   color: '#121212';
-  background-color: #fff;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -54,14 +53,14 @@ html{
 }
 
 
-body {
+/* body {
   margin: 0;
   padding: 0;
   display: flex;
   place-items: center; 
   overflow-x: hidden;
 }
-
+ */
 /* .active {
   @apply text-black  font-bold bg-[--text-extra] px-2 rounded-full ;
 }
