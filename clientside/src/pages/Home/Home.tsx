@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import loginImage from '../../assets/amico.png';
 import Button from '../../Components/Button';
 
-const Login: React.FC = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [profile] = useState<string[]>([]); // Specify type as string array
+  const [profile] = useState<string[]>([]);
   const [message] = useState<string | boolean>(false);
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
           />
           <Button
             className='w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400'
-            onClick={handleSubmit} // Pass handleSubmit directly
+            onClick={handleSubmit}
           >
             Get Started
           </Button>
@@ -54,4 +54,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Home;

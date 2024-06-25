@@ -1,9 +1,8 @@
-// Button.tsx
 import React from 'react';
 
 interface ButtonProps {
   className: string;
-  onClick?: () => void; // Make onClick optional
+  onClick?: () => void;
   children: React.ReactNode;
 }
 
