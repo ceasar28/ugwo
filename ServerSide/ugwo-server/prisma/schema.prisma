@@ -42,7 +42,7 @@ model Invoice {
 model Request {
   id            Int     @id @default(autoincrement())
   requestNumber BigInt
-  toId          Int?
+  to_Id         Int?
   detail        String?
   amount        String?
   status        Status

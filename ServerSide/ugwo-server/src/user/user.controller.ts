@@ -37,7 +37,7 @@ export class UserController {
     return await this.userService.findUserAddress(displayName);
   }
 
-  @Get('users')
+  @Get()
   async findAllUser() {
     return await this.userService.findAllUser();
   }
