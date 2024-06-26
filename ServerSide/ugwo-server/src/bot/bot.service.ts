@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as TelegramBot from 'node-telegram-bot-api';
 import { welcomeMessageMarkup, allFeaturesMarkup, pdFDetails } from './markups';
 
-const TELEGRAM_TOKEN = '7080447298:AAEPhCEaj5Ih2iLk1F1hAnoC2sMClJDkbqY';
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 @Injectable()
 export class BotService {
   private readonly bot: TelegramBot;

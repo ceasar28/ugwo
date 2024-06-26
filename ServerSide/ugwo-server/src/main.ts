@@ -11,7 +11,7 @@ async function bootstrap() {
     .setDescription('ụgwọ Server API')
     .setVersion('1.0')
     .addServer('http://localhost:5000/', 'Local environment')
-    .addServer('https://production.yourapi.com/', 'Production')
+    .addServer('https://ugwo.onrender.com/', 'Production')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
