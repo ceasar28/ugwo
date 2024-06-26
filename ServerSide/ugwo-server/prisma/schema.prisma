@@ -18,6 +18,7 @@ model User {
   displayName   String?   @unique
   firstName     String?
   lastName      String?
+  email         String?
   walletAddress String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -26,28 +27,29 @@ model User {
 }
 
 model Invoice {
-  id            Int     @id @default(autoincrement())
-  invoiceNumber BigInt
-  clientName    String?
-  clientEmail   String?
-  clientId      Int?
-  vendorInfo    String?
-  ServiceInfo   String?
-  amount        String?
-  status        Status
-  user          User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id       Int
+  id               Int     @id @default(autoincrement())
+  invoiceNumber    String  @unique @default(uuid())
+  receivingAddress String?
+  clientAddress    String?
+  clientName       String?
+  clientEmail      String?
+  ServiceInfo      String?
+  amount           String?
+  status           Status  @default(PENDING)
+  user             User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id          Int
 }
 
 model Request {
-  id            Int     @id @default(autoincrement())
-  requestNumber BigInt
-  to_Id         Int?
-  detail        String?
-  amount        String?
-  status        Status
-  user          User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id       Int
+  id               Int     @id @default(autoincrement())
+  requestNumber    String  @unique @default(uuid())
+  receivingAddress String?
+  payerAddress     String?
+  detail           String?
+  amount           String?
+  status           Status  @default(PENDING)
+  user             User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id          Int
 }
 
 enum Status {

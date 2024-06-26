@@ -6,16 +6,16 @@ import { DatabaseService } from 'src/database/database.service';
 export class InvoiceService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async createInvoice(createInvoiceDto: Prisma.InvoiceCreateInput) {
+  async createInvoice(createInvoicedto: Prisma.InvoiceCreateInput) {
     return await this.databaseService.invoice.create({
-      data: createInvoiceDto,
+      data: createInvoicedto,
     });
   }
 
-  async updateInvoice(id: number, updateInvoiceDto: Prisma.InvoiceUpdateInput) {
+  async updateInvoice(id: number, updateInvoicedto: Prisma.InvoiceUpdateInput) {
     return await this.databaseService.invoice.update({
       where: { id },
-      data: updateInvoiceDto,
+      data: updateInvoicedto,
     });
   }
 
@@ -37,7 +37,7 @@ export class InvoiceService {
   async findReceiverInvoice(user: string) {
     const invoices = await this.databaseService.invoice.findMany({
       where: {
-        clientId: +user,
+        clientAddress: user,
       },
     });
     return { invoices: invoices };

@@ -42,7 +42,7 @@ export class PaymentRequestService {
   async findRequesteePaymentRequest(user: string) {
     const PaymentRequests = await this.databaseService.request.findMany({
       where: {
-        to_Id: +user,
+        payerAddress: user,
       },
     });
     return { PaymentRequests: PaymentRequests };
