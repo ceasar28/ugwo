@@ -4,7 +4,7 @@ import { sidebar } from "../pages/utilites/data/data"
 
 const FloatingNavbar = () => {
     return (
-        <div>
+        <div className="bg-primary-100">
             <div>
                 {sidebar.map((item, index ) => (
                     <NavLink  to={item.path} key={index}>

@@ -13,7 +13,7 @@ interface SidebarItem {
 export const sidebar: SidebarItem[] = [
     {
         name: 'Dashboard',
-        path: '/dashboard',
+        path: '/Wallet',
         icon: Dashboard
     },
     {

@@ -16,9 +16,9 @@ const sdk = new CoinbaseWalletSDK({
 
 const provider = sdk.makeWeb3Provider();
 
-const Login: React.FC = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [profile] = useState<string[]>([]); // Specify type as string array
+  const [profile] = useState<string[]>([]);
   const [message] = useState<string | boolean>(false);
   const account = useAccount();
   const { address } = useAccount();
@@ -70,8 +70,13 @@ const Login: React.FC = () => {
             className="flex justify-center items-center w-[70%] ml-12"
           />
           <Button
+<<<<<<< HEAD
             className="w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400"
             onClick={handleSubmit} // Pass handleSubmit directly
+=======
+            className='w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400'
+            onClick={handleSubmit}
+>>>>>>> ui
           >
             Get Started
           </Button>
@@ -87,4 +92,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Home;
