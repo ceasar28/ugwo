@@ -30,4 +30,11 @@ export class UserService {
     });
     return { address: user.walletAddress };
   }
+
+  async findUserByAddress(walletAddress: string) {
+    const user = await this.databaseService.user.findFirst({
+      where: { walletAddress },
+    });
+    return { user: user };
+  }
 }

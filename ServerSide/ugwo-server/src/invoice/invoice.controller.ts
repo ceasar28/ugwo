@@ -42,21 +42,25 @@ export class InvoiceController {
     return await this.invoiceService.updateInvoice(+id, updateInvoiceDto);
   }
 
+  @ApiOperation({ summary: 'Delete Invoice' })
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.invoiceService.delete(+id);
   }
 
+  @ApiOperation({ summary: 'Get all Invoice' })
   @Get()
   async findAllInvoice() {
     return await this.invoiceService.findAllInvoice();
   }
 
+  @ApiOperation({ summary: 'Get all Invoice sent by a user' })
   @Get(':id')
   async findUserInvoice(@Param('id') id: string) {
     return await this.invoiceService.findUserInvoice(id);
   }
 
+  @ApiOperation({ summary: 'Get all Invoice sent to a user' })
   @Get('receiver/:address')
   async findReceiverInvoice(@Param('address') address: string) {
     return await this.invoiceService.findUserInvoice(address);

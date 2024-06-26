@@ -41,16 +41,25 @@ export class UserController {
     return await this.userService.updateUser(+id, updateUserDto);
   }
 
+  @ApiOperation({ summary: 'Delete User' })
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.userService.delete(+id);
   }
 
-  @Get(':displayName')
+  @ApiOperation({ summary: 'Get users wallet from thier displayname' })
+  @Get('get-wallet/:displayName')
   async findUserAddress(@Param('displayName') displayName: string) {
     return await this.userService.findUserAddress(displayName);
   }
 
+  @ApiOperation({ summary: 'Find a user by thier wallet address' })
+  @Get('get-user/:walletAddress')
+  async findUserByAddress(@Param('walletAddress') walletAddress: string) {
+    return await this.userService.findUserByAddress(walletAddress);
+  }
+
+  @ApiOperation({ summary: 'Get all Users' })
   @Get()
   async findAllUser() {
     return await this.userService.findAllUser();
