@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import loginImage from "../../assets/amico.png";
 import Button from "../../Components/Button";
@@ -28,29 +28,39 @@ const Home: React.FC = () => {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    createWallet();
+    // connect wallet
+    await createWallet();
     // handleDisconnectWallet();
 
-    if (profile.length > 0) {
-      navigate("/wallet");
-    } else {
-      console.log("no record");
-      navigate("/profile");
-    }
+    // if (profile.length > 0) {
+    //   navigate("/wallet");
+    // } else {
+    //   console.log("no record");
+    //   navigate("/profile");
+    // }
   };
 
-  const createWallet = useCallback(() => {
+  const createWallet = useCallback(async () => {
     const coinbaseWalletConnector = connectors.find(
       (connector) => connector.id === "coinbaseWalletSDK"
     );
     if (coinbaseWalletConnector) {
-      connect({ connector: coinbaseWalletConnector });
+      return await connect({ connector: coinbaseWalletConnector });
     }
   }, [connectors, connect]);
 
+  //TODO: use this for logout
   const handleDisconnectWallet = useCallback(() => {
     disconnect();
   }, [disconnect]);
+
+  useEffect(() => {
+    if (address) {
+      console.log(address);
+      // TODO: here check if a user wallet has a profile, if not take them to the profile page, else take them to the wallet page
+      navigate("/wallet");
+    }
+  }, [address, navigate]);
 
   return (
     <div className="w-full min-h-full flex justify-center bg-primary-100">
@@ -70,13 +80,8 @@ const Home: React.FC = () => {
             className="flex justify-center items-center w-[70%] ml-12"
           />
           <Button
-<<<<<<< HEAD
             className="w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400"
-            onClick={handleSubmit} // Pass handleSubmit directly
-=======
-            className='w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400'
             onClick={handleSubmit}
->>>>>>> ui
           >
             Get Started
           </Button>
