@@ -1,72 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-//import { Link } from "react-router-dom";
-//import { BsEye, BsEyeSlash } from "react-icons/bs";
 import loginImage from "../../assets/amico.png";
-//import googleImg from "../assets/devicon_google.jpg";
-//import Input from "../Components/Input";
 import Button from "../../Components/Button";
-//import logoImage from "../assets/material-symbols_robot.png";
-//import auxibot from "../assets/material-symbols_robot.jpg";
-// import { toast } from "react-toastify";
+// import { Avatar } from "@coinbase/onchainkit/identity";
+// import { ConnectAccount } from "@coinbase/onchainkit/wallet";
+import { useAccount, useDisconnect, useConnect, useChainId } from "wagmi";
+import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
+import { CoinbaseWalletLogo } from "../../utils/coinBaseWalletLogo";
 
-// import auxiBotProtocol from "../utils/protocol.json";
+const sdk = new CoinbaseWalletSDK({
+  appName: "ụgwọ",
+  appLogoUrl: "https://example.com/logo.png",
+  appChainIds: [84532],
+});
 
-const Login: React.FC = () => {
+const provider = sdk.makeWeb3Provider();
+
+const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [profile, setUserprofile] = useState<any[]>([]);
+  const [profile] = useState<string[]>([]);
+  const [message] = useState<string | boolean>(false);
+  const account = useAccount();
+  const { address } = useAccount();
+  const { connectors, connect, status, data } = useConnect();
+  const { disconnect } = useDisconnect();
+  const chainId = useChainId();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    // connect wallet
+    await createWallet();
+    // handleDisconnectWallet();
 
-    if (profile) {
-      return navigate("/wallet");
-    } else {
-      console.log("no record");
-      return navigate("/profile");
-    }
+    // if (profile.length > 0) {
+    //   navigate("/wallet");
+    // } else {
+    //   console.log("no record");
+    //   navigate("/profile");
+    // }
   };
 
-  const [message, setMessage] = useState<string | boolean>(false);
+  const createWallet = useCallback(async () => {
+    const coinbaseWalletConnector = connectors.find(
+      (connector) => connector.id === "coinbaseWalletSDK"
+    );
+    if (coinbaseWalletConnector) {
+      return await connect({ connector: coinbaseWalletConnector });
+    }
+  }, [connectors, connect]);
+
+  //TODO: use this for logout
+  const handleDisconnectWallet = useCallback(() => {
+    disconnect();
+  }, [disconnect]);
+
+  useEffect(() => {
+    if (address) {
+      console.log(address);
+      // TODO: here check if a user wallet has a profile, if not take them to the profile page, else take them to the wallet page
+      navigate("/wallet");
+    }
+  }, [address, navigate]);
 
   return (
     <div className="w-full min-h-full flex justify-center bg-primary-100">
-      {/*   <div className="Logo flex items-center mt-5 ml-5 absolute cursor-pointer ">
-        <Link to="/">
-          {" "}
-          <div className="flex items-center cursor-pointer">
-            <img
-              src={logoImage}
-              alt="Logo"
-              className="h-8 mr-2 top-[3.5rem] left-[1.6rem]"
-            />
-
-            <div className=" text-center text-white text-2xl font-semibold font-['Inter']">
-              AuxiBot
-              <br />
-            </div>
-          </div>
-        </Link>
-        <Link to="/">
-          {" "}
-          <div className="flex items-center cursor-pointer ms:hidden">
-            <img
-              src={auxibot}
-              alt="Logo"
-              className="h-8 mr-2 absolute top-[0rem] left-[0rem]"
-            />
-
-            <div className=" text-center text-primary-600 absolute top-[0rem] left-[2.6rem] text-2xl font-semibold font-['Inter']">
-              AuxiBot
-              <br />
-            </div>
-          </div>
-        </Link>
-      </div> */}
-      {/*  <div className="w-[45vw] min-h-[100vh] bg-violet-900 hidden ms:flex justify-center items-center">
-        <img src={loginImage} alt="Logo" className="w-[70%] mr-12" />
-      </div> */}
-      <div className="w-[90vw] ms:w-[60vw] min-h-[80vh] ms:absolute  flex flex-col justify-center items-center m-auto">
+      <div className="w-[90vw] ms:w-[60vw] min-h-[80vh] ms:absolute flex flex-col justify-center items-center m-auto">
         <div className="w-[354px] text-center text-black text-[16px] sm:text-[20px] font-semibold font-Sora">
           Make Seamless Payment
         </div>
@@ -76,43 +74,14 @@ const Login: React.FC = () => {
           className="bg-primary-100 rounded-lg shadow-8xl p-6 max-w-md mx-auto transform transition-all duration-300 hover:shadow-4xl"
           onSubmit={handleSubmit}
         >
-          {/* Email Input */}
-          {/* <div>
-            <p className="text-[16px] font-Sora font-medium mb-[14px]">
-              First Name
-            </p>
-            <Input
-              type={"text"}
-              placeholder="First Name"
-              value={firstName}
-              onChange={handleFirstNameChange}
-            />
-          </div> */}
-          {/* <div>
-            <p className="text-[16px] font-Sora font-medium mb-[14px]">
-              Last Name
-            </p>
-            <Input
-              type={"text"}
-              placeholder="Last NAME"
-              value={lastName}
-              onChange={handleLastNameChange}
-            />
-          </div>
-          <div>
-            <p className="text-[16px] font-Sora font-medium mb-[14px]">Email</p>
-            <Input
-              type={"text"}
-              placeholder="Enter your Email"
-              value={email}
-              onChange={handleEmailChange}
-            />
-          </div> */}
-          <img src={loginImage} alt="Logo" className="flex justify-center items-center w-[70%] ml-12" />
-
+          <img
+            src={loginImage}
+            alt="Logo"
+            className="flex justify-center items-center w-[70%] ml-12"
+          />
           <Button
-            onClick={handleSubmit}
             className="w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400"
+            onClick={handleSubmit}
           >
             Get Started
           </Button>
@@ -128,4 +97,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Home;
