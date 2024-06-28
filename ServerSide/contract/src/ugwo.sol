@@ -1,181 +1,288 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-interface IERC20 {
-    function transfer(address recipient, uint256 amount) external returns (bool);
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    function balanceOf(address account) external view returns (uint256);
-}
-
-contract Ugwo {
+contract SubscriptionManager {
+    address payable public owner;
 
     struct Payment {
-        address sender;
-        address recipient;
+        address from;
+        address to;
         uint256 amount;
         string description;
-        string paymentUUID;
+        uint256 timestamp;
     }
 
-    struct SubscriptionPlan {
-        bool active;
-        uint256 amount;
-        uint256 period; // in seconds
+    struct Plan {
+        address creator;
         address payable recipient;
-        string planId;
+        uint256 period;
+        uint256 amount;
+        bool isActive;
+        uint256 planId;
     }
 
     struct Subscription {
-        uint256 startTime;
-        uint256 endTime;
-        bool active;
-        string planId;
-        string subscriptionId;
+        uint256 subscriptionId;
+        uint256 planId;
+        address payable payer;
+        bool isActive;
+        uint256 totalAmountPaid;
+        uint256 remainingAmount;
+        uint256 totalSubscriptionPeriod;
+        uint256 balance;
+        uint256 payoutCount;
     }
 
-    mapping(string => Payment) public payments;
-    mapping(string => SubscriptionPlan) public subscriptionPlans;
-    mapping(address => string[]) public userCreatedPlans;
-    mapping(address => string[]) public userSubscribedPlans;
-    mapping(string => Subscription) public subscriptions;
+    Payment[] public payments;
+    Plan[] public plans;
+    Subscription[] public subscriptions;
 
-    string[] public allSubscriptionPlans;
-    string[] public allSubscriptions;
+    mapping(address => uint256[]) public userPlans;
+    mapping(address => uint256[]) public userSubscriptions;
+    mapping(address => uint256[]) public userPayments;
+    mapping(address => uint256[]) public userReceivedPayments;
+    mapping(uint256 => uint256[]) public planSubscriptions;
 
-    mapping(address => string[]) public paymentHistory;
+    event PaymentSent(address indexed from, address indexed to, uint256 amount, string description);
+    event PlanCreated(address indexed creator, uint256 planId);
+    event PlanCancelled(uint256 planId);
+    event Subscribed(uint256 planId, address indexed payer, uint256 subscriptionId);
+    event SubscriptionCancelled(uint256 planId, address indexed payer, uint256 subscriptionId);
+    event Payout(uint256 planId, address indexed creator, address indexed payer, uint256 amount);
 
-    event PaymentSent(address indexed sender, address indexed recipient, uint256 amount, string description, string paymentUUID);
-    event SubscriptionCreated(address indexed creator, uint256 amount, uint256 period, string planId);
-    event Subscribed(address indexed subscriber, address indexed planOwner, uint256 amount, uint256 startTime, uint256 endTime, string planId, string subscriptionId);
-    event Payout(address indexed planOwner, address indexed subscriber, uint256 amount, string planId, string subscriptionId);
-    event SubscriptionCancelled(address indexed subscriber, address indexed planOwner, uint256 amount, string planId, string subscriptionId);
-
-    function generateUUID() internal view returns (string memory) {
-        return string(abi.encodePacked(keccak256(abi.encodePacked(msg.sender, block.timestamp))));
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _;
     }
 
-    function sendEthPayment(address payable recipient, string memory description, string memory paymentUUID) public payable {
-        require(msg.value > 0, "Payment amount must be greater than 0");
-        string memory paymentId = generateUUID();
-        payments[paymentId] = Payment(msg.sender, recipient, msg.value, description, paymentUUID);
-        paymentHistory[msg.sender].push(paymentId);
-
-        recipient.transfer(msg.value);
-        emit PaymentSent(msg.sender, recipient, msg.value, description, paymentUUID);
+    constructor() {
+        owner = payable(msg.sender);
     }
 
-    function createSubscriptionPlan(uint256 amount, uint256 period) public {
-        require(amount > 0, "Subscription amount must be greater than 0");
-        require(period > 0, "Subscription period must be greater than 0");
+    function sendPayment(address payable _to, string memory _description) external payable {
+        require(msg.value > 0, "Payment amount must be greater than zero");
 
-        string memory planId = generateUUID();
-        subscriptionPlans[planId] = SubscriptionPlan(true, amount, period, payable(msg.sender), planId);
-        userCreatedPlans[msg.sender].push(planId);
-        allSubscriptionPlans.push(planId);
-        emit SubscriptionCreated(msg.sender, amount, period, planId);
+        payable(_to).transfer(msg.value);
+
+        uint256 paymentId = payments.length;
+        payments.push(Payment({
+            from: msg.sender,
+            to: _to,
+            amount: msg.value,
+            description: _description,
+            timestamp: block.timestamp
+        }));
+
+        userPayments[msg.sender].push(paymentId);
+        userReceivedPayments[_to].push(paymentId);
+
+        emit PaymentSent(msg.sender, _to, msg.value, _description);
     }
 
-    function subscribe(address planOwner, string memory planId) public payable {
-        SubscriptionPlan memory plan = subscriptionPlans[planId];
-        require(plan.amount > 0, "Subscription plan does not exist");
-        require(plan.active, "Subscription plan is not active");
-
-        require(msg.value == plan.amount, "Incorrect subscription amount");
-
-        string memory subscriptionId = generateUUID();
-        subscriptions[subscriptionId] = Subscription(block.timestamp, block.timestamp + plan.period, true, planId, subscriptionId);
-        userSubscribedPlans[msg.sender].push(subscriptionId);
-        allSubscriptions.push(subscriptionId);
-        emit Subscribed(msg.sender, planOwner, msg.value, block.timestamp, block.timestamp + plan.period, planId, subscriptionId);
+    function getPaymentHistory() public view returns (Payment[] memory) {
+        return payments;
     }
 
-    function payout(string memory subscriptionId) public {
-        Subscription memory subscription = subscriptions[subscriptionId];
-        require(subscription.active, "No active subscription found");
-        require(block.timestamp >= subscription.endTime, "Subscription period has not ended");
+    function getUserPaymentHistory(address _user) public view returns (Payment[] memory) {
+        uint256[] memory paymentIds = userPayments[_user];
+        Payment[] memory result = new Payment[](paymentIds.length);
 
-        SubscriptionPlan storage plan = subscriptionPlans[subscription.planId];
-        require(plan.amount > 0, "Subscription plan does not exist");
-        require(plan.active, "Subscription plan is not active");
-
-        plan.recipient.transfer(plan.amount);
-
-        subscriptions[subscriptionId].active = false;
-        emit Payout(plan.recipient, msg.sender, plan.amount, subscription.planId, subscriptionId);
-    }
-
-    function cancelSubscription(string memory subscriptionId) public {
-        Subscription memory subscription = subscriptions[subscriptionId];
-        require(subscription.active, "No active subscription found");
-        require(block.timestamp < subscription.endTime, "Subscription period has already ended");
-
-        SubscriptionPlan memory plan = subscriptionPlans[subscription.planId];
-        require(plan.amount > 0, "Subscription plan does not exist");
-        require(plan.active, "Subscription plan is not active");
-
-        payable(msg.sender).transfer(plan.amount);
-
-        subscriptions[subscriptionId].active = false;
-        emit SubscriptionCancelled(msg.sender, plan.recipient, plan.amount, subscription.planId, subscriptionId);
-    }
-
-    function cancelSubscriptionPlan(string memory planId) public {
-        SubscriptionPlan storage plan = subscriptionPlans[planId];
-        require(plan.amount > 0, "Subscription plan does not exist");
-        require(plan.active, "Subscription plan is already cancelled");
-
-        plan.active = false;
-        emit SubscriptionCancelled(msg.sender, plan.recipient, plan.amount, planId, "");
-    }
-
-    function getAllSubscriptionPlans() public view returns (SubscriptionPlan[] memory) {
-        SubscriptionPlan[] memory plans = new SubscriptionPlan[](allSubscriptionPlans.length);
-        for (uint i = 0; i < allSubscriptionPlans.length; i++) {
-            plans[i] = subscriptionPlans[allSubscriptionPlans[i]];
+        for (uint256 i = 0; i < paymentIds.length; i++) {
+            result[i] = payments[paymentIds[i]];
         }
+
+        return result;
+    }
+
+    function getUserReceivedPaymentHistory(address _user) public view returns (Payment[] memory) {
+        uint256[] memory paymentIds = userReceivedPayments[_user];
+        Payment[] memory result = new Payment[](paymentIds.length);
+
+        for (uint256 i = 0; i < paymentIds.length; i++) {
+            result[i] = payments[paymentIds[i]];
+        }
+
+        return result;
+    }
+
+    function createPlan(
+        uint256 _period,
+        uint256 _amount
+    ) public {
+        uint256 planId = plans.length;
+
+        plans.push(Plan({
+            creator: msg.sender,
+            recipient: payable(msg.sender),
+            period: _period,
+            amount: _amount,
+            isActive: true,
+            planId: planId
+        }));
+
+        userPlans[msg.sender].push(planId);
+
+        emit PlanCreated(msg.sender, planId);
+    }
+
+    function cancelPlan(uint256 _planId) external {
+        Plan storage plan = plans[_planId];
+        require(plan.creator == msg.sender, "Only plan creator can cancel the plan");
+        require(plan.isActive, "Subscription plan is already cancelled");
+
+        plan.isActive = false;
+
+        emit PlanCancelled(_planId);
+    }
+
+    function getPlans() external view returns (Plan[] memory) {
         return plans;
     }
 
-    function getAllSubscriptions() public view returns (Subscription[] memory) {
-        Subscription[] memory subs = new Subscription[](allSubscriptions.length);
-        for (uint i = 0; i < allSubscriptions.length; i++) {
-            subs[i] = subscriptions[allSubscriptions[i]];
+    function getPlansByAddress(address _user) external view returns (Plan[] memory) {
+        uint256[] memory planIds = userPlans[_user];
+        Plan[] memory result = new Plan[](planIds.length);
+
+        for (uint256 i = 0; i < planIds.length; i++) {
+            result[i] = plans[planIds[i]];
         }
-        return subs;
+
+        return result;
     }
 
-    function getCreatedSubscriptionPlansByUser(address user) public view returns (SubscriptionPlan[] memory) {
-        string[] memory planIds = userCreatedPlans[user];
-        SubscriptionPlan[] memory plans = new SubscriptionPlan[](planIds.length);
-        for (uint i = 0; i < planIds.length; i++) {
-            plans[i] = subscriptionPlans[planIds[i]];
+    function subscribeToPlan(uint256 _planId, uint256 _totalSubscriptionPeriod) external payable {
+        Plan storage plan = plans[_planId];
+        require(plan.isActive, "Plan is not active");
+
+        uint256 totalAmount = plan.amount * _totalSubscriptionPeriod;
+        require(msg.value == totalAmount, "Incorrect subscription amount");
+
+        uint256 subscriptionId = subscriptions.length;
+
+        subscriptions.push(Subscription({
+            subscriptionId: subscriptionId,
+            planId: _planId,
+            payer: payable(msg.sender),
+            isActive: true,
+            totalAmountPaid: 0,
+            remainingAmount: totalAmount,
+            totalSubscriptionPeriod: _totalSubscriptionPeriod,
+            balance: totalAmount,
+            payoutCount: 0
+        }));
+
+        userSubscriptions[msg.sender].push(subscriptionId);
+        planSubscriptions[_planId].push(subscriptionId);
+
+        emit Subscribed(_planId, msg.sender, subscriptionId);
+    }
+
+    function getSubscriptions() external view returns (Subscription[] memory) {
+        return subscriptions;
+    }
+
+    function getSubscriptionsByAddress(address _user) external view returns (Subscription[] memory) {
+        uint256[] memory subscriptionIds = userSubscriptions[_user];
+        Subscription[] memory result = new Subscription[](subscriptionIds.length);
+
+        for (uint256 i = 0; i < subscriptionIds.length; i++) {
+            result[i] = subscriptions[subscriptionIds[i]];
         }
-        return plans;
+
+        return result;
     }
 
-    function getSubscribedPlansByUser(address user) public view returns (Subscription[] memory) {
-        string[] memory subscriptionIds = userSubscribedPlans[user];
-        Subscription[] memory subs = new Subscription[](subscriptionIds.length);
-        for (uint i = 0; i < subscriptionIds.length; i++) {
-            subs[i] = subscriptions[subscriptionIds[i]];
+    function cancelSubscription(uint256 _subscriptionId) external {
+        Subscription storage subscription = subscriptions[_subscriptionId];
+        require(subscription.payer == msg.sender, "Only subscriber can cancel the subscription");
+
+        uint256 refundAmount = subscription.balance;
+        subscription.isActive = false;
+        subscription.balance = 0;
+
+        subscription.payer.transfer(refundAmount);
+
+        emit SubscriptionCancelled(subscription.planId, msg.sender, _subscriptionId);
+    }
+
+    function getPlanSubscribers(uint256 _planId) external view returns (Subscription[] memory) {
+        uint256[] memory subscriptionIds = planSubscriptions[_planId];
+        Subscription[] memory result = new Subscription[](subscriptionIds.length);
+
+        for (uint256 i = 0; i < subscriptionIds.length; i++) {
+            result[i] = subscriptions[subscriptionIds[i]];
         }
-        return subs;
+
+        return result;
     }
 
-    function getSubscriptionPlan(string memory planId) public view returns (SubscriptionPlan memory) {
-        return subscriptionPlans[planId];
-    }
+    function payout(uint256 _planId) external onlyOwner {
+        Plan storage plan = plans[_planId];
+        require(plan.isActive, "Plan is not active");
 
-    function getSubscription(string memory subscriptionId) public view returns (Subscription memory) {
-        return subscriptions[subscriptionId];
-    }
+        for (uint256 i = 0; i < subscriptions.length; i++) {
+            Subscription storage subscription = subscriptions[i];
+            if (subscription.planId == _planId && subscription.isActive) {
+                uint256 amountToPay = plan.amount;
+                uint256 creatorShare = (amountToPay * 95) / 100;
+                uint256 callerShare = amountToPay - creatorShare;
 
-    function getPaymentHistory(address user) public view returns (Payment[] memory) {
-        string[] memory paymentIds = paymentHistory[user];
-        Payment[] memory userPayments = new Payment[](paymentIds.length);
-        for (uint i = 0; i < paymentIds.length; i++) {
-            userPayments[i] = payments[paymentIds[i]];
+                require(subscription.balance >= amountToPay, "Insufficient balance in subscription");
+                subscription.balance -= amountToPay;
+                subscription.totalAmountPaid += amountToPay;
+                subscription.payoutCount++;
+
+                plan.recipient.transfer(creatorShare);
+                payable(msg.sender).transfer(callerShare);
+
+                emit Payout(_planId, plan.creator, subscription.payer, amountToPay);
+            }
         }
-        return userPayments;
+    }
+
+    function getActivePlans() external view returns (Plan[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 0; i < plans.length; i++) {
+            if (plans[i].isActive) {
+                count++;
+            }
+        }
+
+        Plan[] memory result = new Plan[](count);
+        uint256 j = 0;
+
+        for (uint256 i = 0; i < plans.length; i++) {
+            if (plans[i].isActive) {
+                result[j] = plans[i];
+                j++;
+            }
+        }
+
+        return result;
+    }
+
+    function getActiveSubscriptions() external view returns (Subscription[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 0; i < subscriptions.length; i++) {
+            if (subscriptions[i].isActive) {
+                count++;
+            }
+        }
+
+        Subscription[] memory result = new Subscription[](count);
+        uint256 j = 0;
+
+        for (uint256 i = 0; i < subscriptions.length; i++) {
+            if (subscriptions[i].isActive) {
+                result[j] = subscriptions[i];
+                j++;
+            }
+        }
+
+        return result;
+    }
+
+    receive() external payable {
+        revert("Direct payments not accepted");
     }
 }
