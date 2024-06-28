@@ -1,15 +1,21 @@
-import React from 'react';
+// Inside Button.tsx or where Button component is defined
 
+import React from "react";
+
+// Define ButtonProps interface
 interface ButtonProps {
-  className: string;
-  onClick?: () => void;
   children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset"; // Define type prop here
 }
 
-const Button: React.FC<ButtonProps> = ({ className, onClick, children }) => (
-  <button className={className} onClick={onClick}>
-    {children}
-  </button>
-);
+const Button: React.FC<ButtonProps> = ({ children, className, onClick, type = "button" }) => {
+  return (
+    <button className={className} onClick={onClick} type={type}>
+      {children}
+    </button>
+  );
+};
 
 export default Button;

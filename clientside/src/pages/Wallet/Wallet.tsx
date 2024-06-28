@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from "react";
 import BalanceSection from '../../Components/BalanceSection';
 import ActionButtons from '../../Components/ActionButtons';
 import FundSection from '../../Components/FundSection';
 import WithdrawSection from '../../Components/WithdrawSection';
 import TransactionsList from '../../Components/TransactionsList';
 import Modal from '../../Components/Modal';
+import { useAccount } from "wagmi";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>('0');
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { address } = useAccount(); 
+  const [profile, setProfile] = useState<string[]>([]);
 
   const balanceUSD = 4500.0;
   const conversionRates: { [key: string]: number } = {
@@ -38,6 +44,34 @@ const Dashboard: React.FC = () => {
   const handleModalClose = (): void => {
     setActiveModal(null);
   };
+
+  const checkUserProfile = useCallback(async (walletAddress) => {
+    try {
+      const response = await axios.get(
+        `https://ugwo.onrender.com/user/get-user/${walletAddress}`
+      );
+      if (response.data) {
+        console.log(response.data);
+        setProfile(response.data);
+        navigate("/wallet");
+      } else {
+        navigate("/profile");
+      }
+    } catch (error) {
+      console.log("No record found, navigating to profile creation.");
+      navigate("/profile");
+    }
+  }, [navigate]);
+  useEffect(() => {
+    // Check if there is no wallet address
+    if (!address) {
+      navigate("/");
+    } else {
+      // If there is a wallet address, check user profile
+      checkUserProfile(address);
+    }
+  }, [address, navigate, checkUserProfile]);
+
 
   return (
     <div className='min-h-screen bg-primary-100 font-Inter mb-20'>

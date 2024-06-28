@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Navbar from "../../Components/Navbar"; // Adjust the import path as needed
 import loginImage from "../../assets/amico.png";
 import Button from "../../Components/Button";
-// import { Avatar } from "@coinbase/onchainkit/identity";
-// import { ConnectAccount } from "@coinbase/onchainkit/wallet";
 import { useAccount, useDisconnect, useConnect, useChainId } from "wagmi";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletLogo } from "../../utils/coinBaseWalletLogo";
@@ -18,26 +18,18 @@ const provider = sdk.makeWeb3Provider();
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [profile] = useState<string[]>([]);
-  const [message] = useState<string | boolean>(false);
+  const [profile, setProfile] = useState<string[]>([]);
+  const [message, setMessage] = useState<string | boolean>(false);
   const account = useAccount();
   const { address } = useAccount();
   const { connectors, connect, status, data } = useConnect();
-  const { disconnect } = useDisconnect();
+  const { disconnect } = useDisconnect(); // Ensure disconnect is correctly imported and used
   const chainId = useChainId();
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     // connect wallet
     await createWallet();
-    // handleDisconnectWallet();
-
-    // if (profile.length > 0) {
-    //   navigate("/wallet");
-    // } else {
-    //   console.log("no record");
-    //   navigate("/profile");
-    // }
   };
 
   const createWallet = useCallback(async () => {
@@ -49,21 +41,30 @@ const Home: React.FC = () => {
     }
   }, [connectors, connect]);
 
-  //TODO: use this for logout
-  const handleDisconnectWallet = useCallback(() => {
-    disconnect();
-  }, [disconnect]);
-
-  useEffect(() => {
-    if (address) {
-      console.log(address);
-      // TODO: here check if a user wallet has a profile, if not take them to the profile page, else take them to the wallet page
-      navigate("/wallet");
+  const checkUserProfile = useCallback(async (walletAddress) => {
+    try {
+      const response = await axios.get(
+        `https://ugwo.onrender.com/user/get-user/${walletAddress}`
+      );
+      if (response.data) {
+        console.log(response.data);
+        setProfile(response.data);
+        navigate("/wallet");
+      } else {
+        navigate("/profile");
+      }
+    } catch (error) {
+      console.log("No record found, navigating to profile creation.");
+      navigate("/profile");
     }
-  }, [address, navigate]);
+  }, [navigate]);
+
+
 
   return (
     <div className="w-full min-h-full flex justify-center bg-primary-100">
+      {/* <Navbar disconnect={handleDisconnectWallet} />
+      <Button onClick={handleDisconnectWallet}>Disconnect</Button> */}
       <div className="w-[90vw] ms:w-[60vw] min-h-[80vh] ms:absolute flex flex-col justify-center items-center m-auto">
         <div className="w-[354px] text-center text-black text-[16px] sm:text-[20px] font-semibold font-Sora">
           Make Seamless Payment
