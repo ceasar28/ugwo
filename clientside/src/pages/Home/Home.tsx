@@ -7,6 +7,15 @@ import Button from "../../Components/Button";
 import { useAccount, useDisconnect, useConnect, useChainId } from "wagmi";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletLogo } from "../../utils/coinBaseWalletLogo";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
+import {
+  Address,
+  Avatar,
+  Badge,
+  Identity,
+  Name,
+} from "@coinbase/onchainkit/identity";
+import { ConnectAccount } from "@coinbase/onchainkit/wallet";
 
 const sdk = new CoinbaseWalletSDK({
   appName: "ụgwọ",
@@ -21,7 +30,7 @@ const Home: React.FC = () => {
   const [profile, setProfile] = useState<string[]>([]);
   const [message, setMessage] = useState<string | boolean>(false);
   const account = useAccount();
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const { connectors, connect, status, data } = useConnect();
   const { disconnect } = useDisconnect(); // Ensure disconnect is correctly imported and used
   const chainId = useChainId();
@@ -41,25 +50,36 @@ const Home: React.FC = () => {
     }
   }, [connectors, connect]);
 
-  const checkUserProfile = useCallback(async (walletAddress) => {
-    try {
-      const response = await axios.get(
-        `https://ugwo.onrender.com/user/get-user/${walletAddress}`
-      );
-      if (response.data) {
-        console.log(response.data);
-        setProfile(response.data);
-        navigate("/wallet");
-      } else {
-        navigate("/profile");
-      }
-    } catch (error) {
-      console.log("No record found, navigating to profile creation.");
-      navigate("/profile");
-    }
-  }, [navigate]);
+  // const checkUserProfile = useCallback(
+  //   async (walletAddress: any) => {
+  //     try {
+  //       const response = await axios.get(
+  //         `https://ugwo.onrender.com/user/get-user/${walletAddress}`
+  //       );
+  //       if (response.data.user) {
+  //         console.log(response.data);
+  //         setProfile(response.data);
+  //         navigate("/wallet");
+  //         return;
+  //       } else {
+  //         navigate("/profile");
+  //         return;
+  //       }
+  //     } catch (error) {
+  //       console.log("No record found, navigating to profile creation.");
+  //       navigate("/profile");
+  //     }
+  //   },
+  //   [address]
+  // );
 
+  useEffect(() => {
+    alert(account.status);
+    alert(address);
+    alert(account.connector);
 
+    // checkUserProfile(address);
+  }, [address]);
 
   return (
     <div className="w-full min-h-full flex justify-center bg-primary-100">
