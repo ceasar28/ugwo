@@ -7,10 +7,9 @@ import TransactionsList from "../../Components/TransactionsList";
 import Modal from "../../Components/Modal";
 import {
   useAccount,
-  useDisconnect,
-  useConnect,
-  useChainId,
   useBalance,
+  useReadContract,
+  useWriteContract,
 } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
