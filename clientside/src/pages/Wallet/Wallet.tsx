@@ -10,11 +10,16 @@ import {
   useBalance,
   useReadContract,
   useWriteContract,
+  useWaitForTransactionReceipt,
+  useSimulateContract,
 } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Avatar } from "@coinbase/onchainkit/identity";
 import { getTokens } from "@coinbase/onchainkit/token";
+import abi from "../../utils/contractABI.json";
+
+const contractAddress = "0x604b1a9592faf8380b9608cf327652d5bf1012ab";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
@@ -37,6 +42,18 @@ const Dashboard: React.FC = () => {
     EUR: 0.85,
   };
 
+  // Read values from the smart contract
+  const {
+    data: readData,
+    isLoading: readLoading,
+    error,
+  } = useReadContract({
+    address: contractAddress,
+    abi: abi,
+    functionName: "owner",
+    args: [],
+  });
+
   useEffect(() => {
     alert(`${data?.formatted} ${data?.symbol}`);
     const fetchEthValue = async () => {
@@ -45,6 +62,8 @@ const Dashboard: React.FC = () => {
     };
     fetchEthValue();
     alert(account.chain?.nativeCurrency.name);
+
+    alert(readData);
   }, [address]);
 
   const getEthConversionRate = async (): Promise<number> => {
