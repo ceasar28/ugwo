@@ -9,10 +9,12 @@ import {
   useAccount,
   useBalance,
   useReadContract,
+  useReadContracts,
   useWriteContract,
   useWaitForTransactionReceipt,
   useSimulateContract,
 } from "wagmi";
+import { parseEther } from "ethers";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Avatar } from "@coinbase/onchainkit/identity";
@@ -54,16 +56,54 @@ const Dashboard: React.FC = () => {
     args: [],
   });
 
+  // Reading multiples values from the smart contract
+  const {
+    data: allData,
+    isLoading: multipleDataLoading,
+    error: muiltipleReadingError,
+  } = useReadContracts({
+    contracts: [
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getUserPaymentHistory",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getUserReceivedPaymentHistory",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getSubscriptionsByAddress",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getPlansByAddress",
+        args: [address],
+      },
+      { address: contractAddress, abi: abi, functionName: "owner", args: [] },
+      { address: contractAddress, abi: abi, functionName: "owner", args: [] },
+    ],
+  });
+
   useEffect(() => {
-    alert(`${data?.formatted} ${data?.symbol}`);
+    console.log(`user Address :`, address);
+    console.log(`User balance   :`, `${data?.formatted} ${data?.symbol}`);
     const fetchEthValue = async () => {
       const rate = await getEthConversionRate();
       setEthValue((balanceUSD / rate).toFixed(4));
     };
     fetchEthValue();
-    alert(account.chain?.nativeCurrency.name);
+    console.log(account.chain?.nativeCurrency.name);
 
-    alert(readData);
+    console.log(readData);
+    console.log(`All users Data  :`, allData);
   }, [address]);
 
   const getEthConversionRate = async (): Promise<number> => {
