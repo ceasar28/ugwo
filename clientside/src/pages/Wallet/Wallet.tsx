@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
       navigate("/profile");
     }
   }, [navigate]);
-  useEffect(() => {
+  /* useEffect(() => {
     // Check if there is no wallet address
     if (!address) {
       navigate("/");
@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
       // If there is a wallet address, check user profile
       checkUserProfile(address);
     }
-  }, [address, navigate, checkUserProfile]);
+  }, [address, navigate, checkUserProfile]); */
 
 
   return (
