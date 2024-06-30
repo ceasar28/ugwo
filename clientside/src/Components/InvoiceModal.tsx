@@ -80,7 +80,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
 
   return (
     <>
-      <div className='absolute w-full max-w-md bg-black bg-opacity-50 flex items-center justify-center m-auto'>
+      <div className='relative w-full max-w-md bg-black bg-opacity-50 flex items-center justify-center m-auto mt-[-25rem] mb-1'>
         <div className='bg-primary-100 p-6 rounded-lg shadow-4xl w-full max-w-md'>
           <h2 className='text-h5 mb-4'>Create Invoice</h2>
           <div className='mb-4'>
@@ -233,7 +233,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
       </div>
 
       {showConfirmationModal && (
-        <div className='relative w-full max-w-md bg-black bg-opacity-50 flex items-center justify-center m-auto'>
+        <div className='relative w-full max-w-md bg-black bg-opacity-50 flex items-center justify-center m-auto mt-[-30rem]'>
           <div className='bg-primary-100 p-6 rounded-lg shadow-4xl w-full max-w-md'>
             <h2 className='text-h5 mb-4'>Confirm Invoice Details</h2>
             <div className='mb-4'>

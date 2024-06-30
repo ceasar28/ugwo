@@ -41,7 +41,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({ balanceUSD, ethValue, c
           <div className='flex justify-between w-full'>
             <div className='justify-between gap-20 ss:gap-[180px] items-center m-auto'>
               <div className='flex justify-center items-center m-auto'>
-                <h2 className='text-h5 mb-2'>Balance</h2>
+                <h2 className='text-h5 mb-2 text-black-600'>Balance</h2>
               </div>
               <button
                 onClick={toggleBalanceVisibility}
@@ -57,15 +57,17 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({ balanceUSD, ethValue, c
           <div className='relative flex flex-col items-center'>
             {showBalance ? (
               <>
-                <div className="text-2xl font-semibold font-['Inter'] text-primary-600">
+               <div className="text-2xl font-semibold font-['Inter'] text-primary-600">
+                  {`$${balanceUSD.toFixed(2)}`}
+                </div>
+
+                <div className="text-h6 text-gray-400 mb-4">
                   {`${ethValue} ETH`}
                 </div>
-                <div className="text-xl font-['Inter'] text-primary-800 mt-2">
-                  {`$${balanceUSD.toFixed(2)} USD`}
-                </div>
+               
               </>
             ) : (
-              <div className="text-xl font-bold font-['Inter'] text-primary-800 mt-2">
+              <div className="text-2xl font-semibold font-['Inter'] text-primary-600">
                 •••••
               </div>
             )}

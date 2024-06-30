@@ -99,15 +99,6 @@ const Profile: React.FC = () => {
             className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
             required
           />
-          <input
-            type="text"
-            name="walletAddress"
-            placeholder="Wallet Address"
-            value={formData.walletAddress}
-            onChange={handleChange}
-            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
-            required
-          />
           <Button
             className="w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400"
             type="submit"

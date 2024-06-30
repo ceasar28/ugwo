@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAccount, useConnect } from 'wagmi';
+import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk';
 import Button from '../../Components/Button';
+
+const sdk = new CoinbaseWalletSDK({
+  appName: 'ụgwọ',
+  appLogoUrl: 'https://example.com/logo.png',
+  appChainIds: [84532],
+});
+
+const provider = sdk.makeWeb3Provider();
 
 const Invoice: React.FC = () => {
   const {
@@ -30,15 +40,32 @@ const Invoice: React.FC = () => {
   }>();
   
   const navigate = useNavigate();
+  const { address: userAddress } = useAccount();
+  const { connectors, connect } = useConnect();
 
   const handleCancel = () => {
     navigate(-1); // Navigate back
   };
 
-  const handleSubmit = () => {
-    console.log('Invoice sent');
-    // Implement the send invoice functionality here
-    handleCancel();
+  const createWallet = useCallback(async () => {
+    const coinbaseWalletConnector = connectors.find(
+      (connector) => connector.id === 'coinbaseWalletSDK'
+    );
+    if (coinbaseWalletConnector) {
+      return await connect({ connector: coinbaseWalletConnector });
+    }
+  }, [connectors, connect]);
+
+  const handleSubmit = async () => {
+    if (!userAddress) {
+      // No wallet connected, prompt user to connect wallet
+      await createWallet();
+    }
+    if (userAddress) {
+      console.log('Invoice sent');
+      // Implement the send invoice functionality here
+      handleCancel();
+    }
   };
 
   return (

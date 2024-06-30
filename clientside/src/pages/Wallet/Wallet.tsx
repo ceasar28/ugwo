@@ -3,11 +3,13 @@ import BalanceSection from '../../Components/BalanceSection';
 import ActionButtons from '../../Components/ActionButtons';
 import FundSection from '../../Components/FundSection';
 import WithdrawSection from '../../Components/WithdrawSection';
-import TransactionsList from '../../Components/TransactionsList';
+import ActiveSubList from "../../Components/ActiveSubList";
+import PaymentList from '../../Components/TransactionsList';
 import Modal from '../../Components/Modal';
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import PaymentPlans from "../../Components/PaymentPlans";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>('0');
@@ -74,7 +76,7 @@ const Dashboard: React.FC = () => {
 
 
   return (
-    <div className='min-h-screen bg-primary-100 font-Inter mb-20'>
+    <div className='min-h-screen bg-primary-100 font-Inter'>
       <main className='p-6 flex flex-col items-center'>
         <BalanceSection
           balanceUSD={balanceUSD}
@@ -83,9 +85,11 @@ const Dashboard: React.FC = () => {
         />
 
         <ActionButtons />
-        <FundSection handleModalOpen={handleModalOpen} />
-        <WithdrawSection handleModalOpen={handleModalOpen} />
-        <TransactionsList />
+       {/*  <FundSection handleModalOpen={handleModalOpen} />
+        <WithdrawSection handleModalOpen={handleModalOpen} /> */}
+        <PaymentList />
+        <ActiveSubList />
+        <PaymentPlans />
       </main>
       {activeModal && (
         <Modal activeModal={activeModal} handleModalClose={handleModalClose} />
