@@ -36,16 +36,9 @@ const RequestModal: React.FC<RequestModalProps> = ({
     setStep(2);
   };
 
-  /*   const handleCopyLink = () => {
-    const shareableLink = `http://example.com/request/${walletAddress}/${amount}/${note}`;
-    navigator.clipboard.writeText(shareableLink).then(() => {
-      alert('Link copied to clipboard!');
-    }).catch(() => {
-      alert('Failed to copy the link.');
-    });
-  }; */
-
   const truncatedNote = note.length > 20 ? `${note.substring(0, 20)}...` : note;
+
+  const isNextDisabled = amount <= 0;
 
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
@@ -92,15 +85,16 @@ const RequestModal: React.FC<RequestModalProps> = ({
               </p>
             </div>
             <div className='flex justify-end gap-2'>
-            <Button
-                className='bg-blue-500 text-white py-2 px-4 rounded'
+              <Button
+                className='bg-gray-500 text-white py-2 px-4 rounded'
                 onClick={handleModalClose}
               >
-                Cancle
+                Cancel
               </Button>
               <Button
-                className='bg-blue-500 text-white py-2 px-4 rounded'
+                className={`bg-blue-500 text-white py-2 px-4 rounded ${isNextDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleNextStep}
+                disabled={isNextDisabled}
               >
                 Next
               </Button>
@@ -129,16 +123,10 @@ const RequestModal: React.FC<RequestModalProps> = ({
               <p className='text-gray-700 text-sm'>
                 Shareable Link:{' '}
                 <a
-                  href={`http://example.com/request/${walletAddress}/${totalCost}/${truncatedNote}`}
+                  href={`${window.location.origin}/payment/${walletAddress}/${totalCost}/${truncatedNote}`}
                   className='text-blue-500'
-                >{`http://example.com/request/${walletAddress}/${totalCost}/${truncatedNote}`}</a>
+                >{`${window.location.origin}/payment/${walletAddress}/${totalCost}/${truncatedNote}`}</a>
               </p>
-              {/*  <button
-                onClick={handleCopyLink}
-                className='ml-2 text-gray-700 text-sm font-bold border border-gray-700 rounded px-2 py-1'
-              >
-                Copy
-              </button> */}
             </div>
             <div className='flex justify-end'>
               <Button

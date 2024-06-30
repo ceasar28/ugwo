@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+<<<<<<< HEAD
 import BalanceSection from "../../Components/BalanceSection";
 import ActionButtons from "../../Components/ActionButtons";
 import FundSection from "../../Components/FundSection";
@@ -15,6 +16,19 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Avatar } from "@coinbase/onchainkit/identity";
 import { getTokens } from "@coinbase/onchainkit/token";
+=======
+import BalanceSection from '../../Components/BalanceSection';
+import ActionButtons from '../../Components/ActionButtons';
+import FundSection from '../../Components/FundSection';
+import WithdrawSection from '../../Components/WithdrawSection';
+import ActiveSubList from "../../Components/ActiveSubList";
+import PaymentList from '../../Components/TransactionsList';
+import Modal from '../../Components/Modal';
+import { useAccount } from "wagmi";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import PaymentPlans from "../../Components/PaymentPlans";
+>>>>>>> fb90466a150d213f95fc52b27475b682a9684c91
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
@@ -122,8 +136,13 @@ const Dashboard: React.FC = () => {
   // }, [address, navigate, checkUserProfile]);
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-primary-100 font-Inter mb-20">
       <main className="p-6 flex flex-col items-center">
+=======
+    <div className='min-h-screen bg-primary-100 font-Inter'>
+      <main className='p-6 flex flex-col items-center'>
+>>>>>>> fb90466a150d213f95fc52b27475b682a9684c91
         <BalanceSection
           balanceUSD={Number(USDValue)}
           ethValue={ethValue}
@@ -131,9 +150,11 @@ const Dashboard: React.FC = () => {
         />
 
         <ActionButtons />
-        <FundSection handleModalOpen={handleModalOpen} />
-        <WithdrawSection handleModalOpen={handleModalOpen} />
-        <TransactionsList />
+       {/*  <FundSection handleModalOpen={handleModalOpen} />
+        <WithdrawSection handleModalOpen={handleModalOpen} /> */}
+        <PaymentList />
+        <ActiveSubList />
+        <PaymentPlans />
       </main>
       {activeModal && (
         <Modal activeModal={activeModal} handleModalClose={handleModalClose} />
