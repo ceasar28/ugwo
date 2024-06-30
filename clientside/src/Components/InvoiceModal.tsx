@@ -91,7 +91,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='text'
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter client name'
             />
           </div>
@@ -103,7 +103,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='email'
               value={clientEmail}
               onChange={(e) => setClientEmail(e.target.value)}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter client email'
             />
           </div>
@@ -115,7 +115,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='text'
               value={vendorName}
               onChange={(e) => setVendorName(e.target.value)}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter vendor name'
             />
           </div>

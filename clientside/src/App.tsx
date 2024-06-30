@@ -5,6 +5,7 @@ import Wallet from './pages/Wallet/Wallet';
 import NavbarWrapper from './layout/Navbarwrapper';
 import Profile from './pages/profile/Profile';
 import Payment from './pages/Payment/Payment';
+import Invoice from './pages/Invoice/Invoice';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/payment/:walletAddress/:amountETH' element={<Payment />} />
+            <Route path='/invoice/:clientName/:clientEmail/:vendorName/:service/:amount/:currency/:tax/:subtotal/:total/:isRecurring/:recurrenceFrequency' element={<Invoice />} />
             <Route path='/wallet' element={<Wallet />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

@@ -11,10 +11,14 @@ interface BalanceSectionProps {
   conversionRates: { [key: string]: number };
 }
 
+<<<<<<< HEAD
 const BalanceSection: React.FC<BalanceSectionProps> = ({
   balanceUSD,
   ethValue,
 }) => {
+=======
+const BalanceSection: React.FC<BalanceSectionProps> = ({ balanceUSD, ethValue, conversionRates }) => {
+>>>>>>> e448d97dfb16db762a3585cda3cb0080157653df
   const [showBalance, setShowBalance] = useState<boolean>(true);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const walletName = "Dera_007"; // Example wallet name
@@ -32,8 +36,9 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
     setActiveModal(null);
   };
 
-  const handleSend = (address: string, amount: number, currency: string) => {
+  const handleSend = (address: string, amount: number) => {
     // Implement the send functionality here
+<<<<<<< HEAD
     return console.log(`Sending ${amount} ${currency} to ${address}`);
   };
 
@@ -45,6 +50,19 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
             <div className=" justify-between gap-20 ss:gap-[180px] items-center m-auto">
               <div className="flex justify-center items-center m-auto">
                 <h2 className="text-h5 mb-4">Balance</h2>
+=======
+    console.log(`Sending ${amount} ETH to ${address}`);
+  };
+
+  return (
+    <div className='bg-primary-100 font-Inter'>
+      <main className='bg-primary-100 p-6 rounded-lg shadow-4xl w-full max-w-md text-center'>
+        <section className='p-6 w-full max-w-md text-center'>
+          <div className='flex justify-between w-full'>
+            <div className='justify-between gap-20 ss:gap-[180px] items-center m-auto'>
+              <div className='flex justify-center items-center m-auto'>
+                <h2 className='text-h5 mb-2'>Balance</h2>
+>>>>>>> e448d97dfb16db762a3585cda3cb0080157653df
               </div>
               <button
                 onClick={toggleBalanceVisibility}
@@ -57,6 +75,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
               </button>
             </div>
           </div>
+<<<<<<< HEAD
           <div className="relative flex justify-center items-center">
             <div className="text-2xl font-semibold font-['Inter'] text-primary-600">
               {showBalance ? `${ethValue} ETH` : "•••••"}
@@ -64,6 +83,25 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
           </div>
 
           <div className="flex justify-between w-full gap-5">
+=======
+          <div className='relative flex flex-col items-center'>
+            {showBalance ? (
+              <>
+                <div className="text-2xl font-semibold font-['Inter'] text-primary-600">
+                  {`${ethValue} ETH`}
+                </div>
+                <div className="text-xl font-['Inter'] text-primary-800 mt-2">
+                  {`$${balanceUSD.toFixed(2)} USD`}
+                </div>
+              </>
+            ) : (
+              <div className="text-xl font-bold font-['Inter'] text-primary-800 mt-2">
+                •••••
+              </div>
+            )}
+          </div>
+          <div className='flex justify-between w-full gap-5 mt-2'>
+>>>>>>> e448d97dfb16db762a3585cda3cb0080157653df
             <Button
               className="w-[100px] ss:w-[180px] p-6 rounded-lg bg-primary-600 text-white py-2 px-4 hover:bg-primary-400"
               onClick={() => handleModalOpen("send")}
