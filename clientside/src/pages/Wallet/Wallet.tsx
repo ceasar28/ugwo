@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (!address) {
-      // navigate("/");
+      navigate("/");
     } else {
       // checkUserProfile(address);
     }

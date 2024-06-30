@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useAccount, useBalance, useReadContracts } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useReadContract,
+  useReadContracts,
+} from "wagmi";
 import abi from "../utils/contractABI.json";
 
 const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
@@ -22,6 +27,17 @@ const TransactionsList: React.FC = () => {
   >([]);
   const { address } = useAccount();
   const { data } = useBalance({ address: address });
+
+  const {
+    data: readData,
+    isLoading: readLoading,
+    error,
+  } = useReadContract({
+    address: contractAddress,
+    abi: abi,
+    functionName: "getSubscriptionsByAddress",
+    args: [address],
+  });
 
   const {
     data: allData,
@@ -106,7 +122,15 @@ const TransactionsList: React.FC = () => {
                     ) : (
                       <span>{`Received from ${truncatedFrom}`}</span>
                     )}
-                    <span>-{amountInEth.toFixed(3)} ETH</span>
+                    {transaction.from === address ? (
+                      <span className="text-red-500">
+                        - {amountInEth.toFixed(3)} ETH
+                      </span>
+                    ) : (
+                      <span className="text-green-500">
+                        + {amountInEth.toFixed(3)} ETH
+                      </span>
+                    )}
                   </div>
                   <div className="text-gray-400 text-sm">
                     {formatDate(transaction.timestamp)}

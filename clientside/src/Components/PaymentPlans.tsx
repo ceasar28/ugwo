@@ -1,28 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ModalActive from "./ModalActive"; // Assuming you have a Modal component for displaying content
+import { useAccount, useReadContract } from "wagmi";
+import abi from "../utils/contractABI.json";
+
+const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
+
+interface Plan {
+  creator: string;
+  recipient: string;
+  period: bigint;
+  amount: bigint;
+  isActive: boolean;
+  planId: bigint;
+}
 
 const PaymentPlans: React.FC = () => {
+  const { address } = useAccount();
   const [showAllModal, setShowAllModal] = useState(false);
   const [cancelledPayments, setCancelledPayments] = useState<number[]>([]);
+  const [activePlans, setActivePlans] = useState<Plan[]>([]);
 
-  // Mock data for active payments
-  const activePayments = [
-    {
-      id: 1,
-      name: "GYM",
-      amount: -50.0,
-      date: "June 21, 2024",
-    },
-    { id: 2, name: "Physio", amount: 3000.0, date: "June 20, 2024" },
-    // Add more payments as needed
-    { id: 3, name: "Coaching", amount: -25.0, date: "June 19, 2024" },
-    { id: 4, name: "Payment 4", amount: -10.0, date: "June 18, 2024" },
-    { id: 5, name: "Payment 5", amount: -15.0, date: "June 17, 2024" },
-    // Add more payments as needed
-  ];
+  const { data: readData } = useReadContract({
+    address: contractAddress,
+    abi: abi,
+    functionName: "getPlansByAddress",
+    args: [address],
+  }) as { data: Plan[] };
+
+  const getActivePlans = useCallback((plans: Plan[]): Plan[] => {
+    return plans.filter((plan) => plan.isActive);
+  }, []);
+
+  useEffect(() => {
+    if (address && readData) {
+      const activePlans = getActivePlans(readData);
+      setActivePlans(activePlans);
+    }
+  }, [readData, address, getActivePlans]);
 
   const handleCancelPayment = (id: number) => {
-    // Add the payment ID to the list of cancelled payments
     setCancelledPayments((prev) => [...prev, id]);
   };
 
@@ -34,11 +50,24 @@ const PaymentPlans: React.FC = () => {
     setShowAllModal(false);
   };
 
+  const formatDate = (epochTimestamp: bigint) => {
+    const date = new Date(Number(epochTimestamp) * 1000);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const truncateAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <section className="mt-8 w-full max-w-md mb-5">
-      <h3 className="text-h6 flex justify-between items-center m-auto text-primary-400 mb-2 text-bold text-2 font-bold">
-        <p> Active Payments </p>
-        {activePayments.length > 3 && (
+      <h3 className="text-h6 flex justify-between items-center m-auto text-primary-400 mb-2 font-bold text-2xl">
+        <p>Active Payments Plans</p>
+        {activePlans.length > 3 && (
           <button
             className="text-sm text-blue-600 mt-2"
             onClick={handleViewAllPayments}
@@ -48,62 +77,73 @@ const PaymentPlans: React.FC = () => {
         )}
       </h3>
       <ul>
-        {activePayments.slice(0, 3).map((payment) => (
-          <li key={payment.id} className="bg-primary-600 p-4 mb-2 rounded-lg">
-            <div className="flex justify-between text-white">
-              <span>{payment.name}</span>
-              <span>
-                {payment.amount >= 0
-                  ? `+$${payment.amount.toFixed(2)}`
-                  : `-$${Math.abs(payment.amount).toFixed(2)}`}
+        {activePlans.length > 0 ? (
+          activePlans.slice(0, 3).map((plan: Plan, index: number) => (
+            <li key={index} className="bg-white p-4 mb-2 rounded-lg">
+              <div className="flex justify-between text-black-600">
+                <span>{truncateAddress(plan.creator)}</span>
+                <span>
+                  {plan.amount >= 0
+                    ? `+$${Number(plan.amount).toFixed(2)}`
+                    : `-$${Math.abs(Number(plan.amount)).toFixed(2)}`}
+                </span>
+              </div>
+              <span className="flex justify-between items-center m-auto">
+                <div className="text-gray-400 text-sm">
+                  {plan.period.toString()}
+                </div>
+                {cancelledPayments.includes(Number(plan.planId)) ? (
+                  <button
+                    className="text-sm text-white bg-gray-600 p-2 mb-2 rounded-lg"
+                    disabled
+                  >
+                    Canceled
+                  </button>
+                ) : (
+                  <button
+                    className="text-sm text-white bg-red-600 p-2 mb-2 rounded-lg"
+                    onClick={() => handleCancelPayment(Number(plan.planId))}
+                  >
+                    Cancel plan
+                  </button>
+                )}
               </span>
+            </li>
+          ))
+        ) : (
+          <li className="bg-white p-4 mb-2 rounded-lg">
+            <div className="flex justify-between text-black-600">
+              No Active Payment plan
             </div>
-            <span className="flex justify-between items-center m-auto">
-              <div className="text-gray-400 text-sm">{payment.date}</div>
-              {cancelledPayments.includes(payment.id) ? (
-                <button
-                  className="text-sm text-white bg-gray-600 p-2 mb-2 rounded-lg"
-                  disabled
-                >
-                  Canceled
-                </button>
-              ) : (
-                <button
-                  className="text-sm text-white bg-red-600 p-2 mb-2 rounded-lg"
-                  onClick={() => handleCancelPayment(payment.id)}
-                >
-                  Cancel Payment
-                </button>
-              )}
-            </span>
           </li>
-        ))}
+        )}
       </ul>
 
-      {/* Modal to show all payments */}
       {showAllModal && (
         <ModalActive handleClose={handleCloseModal}>
-          <h2 className="text-h6 text-primary-400 mb-2 text-bold text-2 font-bold">
-            All Payments
+          <h2 className="text-h6 text-primary-400 mb-2 font-bold text-2xl">
+            All Payment Plans Created
           </h2>
           <div className="h-96 overflow-y-auto">
             <ul>
-              {activePayments.map((payment) => (
+              {activePlans.map((plan: Plan) => (
                 <li
-                  key={payment.id}
-                  className="bg-primary-600 p-4 mb-2 rounded-lg"
+                  key={Number(plan.planId)}
+                  className="bg-primary-100 p-4 mb-2 rounded-lg"
                 >
-                  <div className="flex justify-between text-white">
-                    <span>{payment.name}</span>
+                  <div className="flex justify-between text-black-600">
+                    <span>{truncateAddress(plan.recipient)}</span>
                     <span>
-                      {payment.amount >= 0
-                        ? `+$${payment.amount.toFixed(2)}`
-                        : `-$${Math.abs(payment.amount).toFixed(2)}`}
+                      {plan.amount >= 0
+                        ? `+$${Number(plan.amount).toFixed(2)}`
+                        : `-$${Math.abs(Number(plan.amount)).toFixed(2)}`}
                     </span>
                   </div>
                   <span className="flex justify-between items-center m-auto">
-                    <div className="text-gray-400 text-sm">{payment.date}</div>
-                    {cancelledPayments.includes(payment.id) ? (
+                    <div className="text-gray-400 text-sm">
+                      {plan.period.toString()}
+                    </div>
+                    {cancelledPayments.includes(Number(plan.planId)) ? (
                       <button
                         className="text-sm text-white bg-gray-600 p-2 mb-2 rounded-lg"
                         disabled
@@ -113,9 +153,9 @@ const PaymentPlans: React.FC = () => {
                     ) : (
                       <button
                         className="text-sm text-white bg-red-600 p-2 mb-2 rounded-lg"
-                        onClick={() => handleCancelPayment(payment.id)}
+                        onClick={() => handleCancelPayment(Number(plan.planId))}
                       >
-                        Cancel Payment
+                        Cancel plan
                       </button>
                     )}
                   </span>
