@@ -20,7 +20,7 @@ import {
 import { parseEther } from "ethers";
 import abi from "../utils/contractABI.json";
 
-const contractAddress = "0x604b1a9592faf8380b9608cf327652d5bf1012ab";
+const contractAddress = "0x468a05df850c836ca08ad965fd5188fa4b3ba032";
 
 interface BalanceSectionProps {
   balanceUSD: number;
@@ -50,7 +50,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
       functionName: "sendPayment",
       args: ["0x6040f022A448dd278D3D5fA0c7998A45eaf8BFBf", "Team"],
       // send ETH according to the price of the NFT:
-      value: parseEther("0.5"),
+      value: parseEther("0.00005"),
     });
 
   // Get the write function

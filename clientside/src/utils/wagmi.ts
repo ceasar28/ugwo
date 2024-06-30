@@ -1,9 +1,9 @@
 import { http, createConfig } from "wagmi";
-import { baseSepolia, klaytnBaobab } from "wagmi/chains";
+import { baseSepolia, klaytnBaobab, sepolia } from "wagmi/chains";
 import { coinbaseWallet } from "wagmi/connectors";
 
 export const config = createConfig({
-  chains: [klaytnBaobab],
+  chains: [sepolia],
   connectors: [
     coinbaseWallet({
       appName: "Create Wagmi",
@@ -11,7 +11,7 @@ export const config = createConfig({
     }),
   ],
   transports: {
-    [klaytnBaobab.id]: http(),
+    [sepolia.id]: http(),
   },
 });
 

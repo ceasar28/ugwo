@@ -21,7 +21,7 @@ import { Avatar } from "@coinbase/onchainkit/identity";
 import { getTokens } from "@coinbase/onchainkit/token";
 import abi from "../../utils/contractABI.json";
 
-const contractAddress = "0x604b1a9592faf8380b9608cf327652d5bf1012ab";
+const contractAddress = "0x468a05df850c836ca08ad965fd5188fa4b3ba032";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
