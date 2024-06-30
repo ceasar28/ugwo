@@ -34,7 +34,7 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose, handleSend }) =
             type='text'
             value={address}
             onChange={handleAddressChange}
-            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             placeholder='Enter wallet name or address'
           />
         </div>
@@ -44,7 +44,7 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose, handleSend }) =
             type='number'
             value={amount}
             onChange={handleAmountChange}
-            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             placeholder='Enter amount in ETH'
           />
         </div>
