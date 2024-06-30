@@ -45,7 +45,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
       <div className='bg-primary-100 p-6 rounded-lg shadow-4xl w-full max-w-md'>
         {step === 1 ? (
           <>
-            <h2 className='text-h5 mb-4'>Request Payment</h2>
+            <h2 className='text-h5 mb-4 text-black-600'>Request Payment</h2>
             <div className='mb-4'>
               <p className='text-gray-700 text-sm font-bold'>
                 Available Balance: ETH {availableBalance.toFixed(4)}
@@ -59,7 +59,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type='number'
                 value={amount}
                 onChange={handleAmountChange}
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                 placeholder='Enter amount to request'
               />
             </div>
@@ -71,7 +71,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type='text'
                 value={note}
                 onChange={handleNoteChange}
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                 placeholder='Enter a summary note'
               />
             </div>

@@ -127,7 +127,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='text'
               value={service}
               onChange={(e) => setService(e.target.value)}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter service description'
             />
           </div>
@@ -139,7 +139,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='number'
               value={amount}
               onChange={handleAmountChange}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter amount'
             />
           </div>
@@ -150,7 +150,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
             <select
               value={currency}
               onChange={handleCurrencyChange}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             >
               {Object.keys(conversionRates).map((curr) => (
                 <option key={curr} value={curr}>
@@ -167,7 +167,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
               type='number'
               value={tax}
               onChange={handleTaxChange}
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               placeholder='Enter tax percentage'
             />
           </div>
