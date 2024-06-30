@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import Button from './Button';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Button from '../../Components/Button';
 
-interface SendModalProps {
-  handleModalClose: () => void;
-  handleSend: (address: string, amount: number) => void;
-}
+const Payment: React.FC = () => {
+  const { walletAddress, amountETH } = useParams<{ walletAddress: string; amountETH: string }>();
+  const [address, setAddress] = useState<string>(walletAddress || '');
+  const [amount, setAmount] = useState<number>(parseFloat(amountETH) || 0);
+  const navigate = useNavigate();
 
-const SendModal: React.FC<SendModalProps> = ({ handleModalClose, handleSend }) => {
-  const [address, setAddress] = useState<string>('');
-  const [amount, setAmount] = useState<number>(0);
+  useEffect(() => {
+    setAddress(walletAddress || '');
+    setAmount(parseFloat(amountETH) || 0);
+  }, [walletAddress, amountETH]);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress(e.target.value);
@@ -17,6 +20,15 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose, handleSend }) =
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setAmount(value);
+  };
+
+  const handleSend = (address: string, amount: number) => {
+    console.log(`Sending ${amount} ETH to ${address}`);
+    // Implement the send functionality here
+  };
+
+  const handleModalClose = () => {
+    navigate(-1); // Navigate back
   };
 
   const handleSubmit = () => {
@@ -61,4 +73,4 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose, handleSend }) =
   );
 };
 
-export default SendModal;
+export default Payment;

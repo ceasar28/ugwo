@@ -18,6 +18,7 @@ import { getTokens } from "@coinbase/onchainkit/token";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
+  const [USDValue, setUSDValue] = useState<string>("0");
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const navigate = useNavigate();
   const { address } = useAccount();
@@ -39,18 +40,38 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     alert(`${data?.formatted} ${data?.symbol}`);
+    const Ethbalance = Number(data?.formatted) || 0;
+    setEthValue(Ethbalance.toString());
     const fetchEthValue = async () => {
-      const rate = await getEthConversionRate();
-      setEthValue((balanceUSD / rate).toFixed(4));
+      setInterval(async () => {
+        try {
+          const rate = await getEthConversionRate();
+          setEthValue(Ethbalance.toString());
+          setUSDValue((Ethbalance * rate).toString());
+        } catch (error) {
+          console.error("Error fetching ETH conversion rate:", error);
+        }
+      }, 60000);
     };
     fetchEthValue();
     alert(account.chain?.nativeCurrency.name);
-  }, [address]);
+  }, [address, data?.formatted]);
 
-  const getEthConversionRate = async (): Promise<number> => {
-    // Simulate an API call
-    return 2000;
-  };
+  const getEthConversionRate = useCallback(async () => {
+    try {
+      const rates = await axios.get(
+        `https://api.coinbase.com/v2/exchange-rates?currency=ETH`
+      );
+      if (rates.data) {
+        console.log(rates.data.data.rates["USD"]);
+        return rates.data.data.rates["USD"];
+        // setProfile(rates.data);
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [data?.formatted]);
 
   const handleModalOpen = (modalName: string): void => {
     setActiveModal(modalName);
@@ -60,26 +81,35 @@ const Dashboard: React.FC = () => {
     setActiveModal(null);
   };
 
-  // const checkUserProfile = useCallback(
-  //   async (walletAddress: any) => {
-  //     try {
-  //       const response = await axios.get(
-  //         `https://ugwo.onrender.com/user/get-user/${walletAddress}`
-  //       );
-  //       if (response.data) {
-  //         console.log(response.data);
-  //         setProfile(response.data);
-  //         navigate("/wallet");
-  //       } else {
-  //         navigate("/profile");
-  //       }
-  //     } catch (error) {
-  //       console.log("No record found, navigating to profile creation.");
-  //       navigate("/profile");
-  //     }
-  //   },
-  //   [navigate]
-  // );
+  const checkUserProfile = useCallback(
+    async (walletAddress: any) => {
+      try {
+        const response = await axios.get(
+          `https://ugwo.onrender.com/user/get-user/${walletAddress}`
+        );
+        if (response.data) {
+          console.log(response.data);
+          setProfile(response.data);
+          navigate("/wallet");
+        } else {
+          navigate("/profile");
+        }
+      } catch (error) {
+        console.log("No record found, navigating to profile creation.");
+        navigate("/profile");
+      }
+    },
+    [navigate]
+  );
+  /* useEffect(() => {
+    // Check if there is no wallet address
+    if (!address) {
+      navigate("/");
+    } else {
+      // If there is a wallet address, check user profile
+      checkUserProfile(address);
+    }
+  }, [address, navigate, checkUserProfile]); */
 
   // useEffect(() => {
   //   // Check if there is no wallet address
@@ -95,7 +125,7 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-primary-100 font-Inter mb-20">
       <main className="p-6 flex flex-col items-center">
         <BalanceSection
-          balanceUSD={balanceUSD}
+          balanceUSD={Number(USDValue)}
           ethValue={ethValue}
           conversionRates={conversionRates}
         />
