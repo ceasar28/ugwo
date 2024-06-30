@@ -11,15 +11,19 @@ export class InvoiceService {
   ) {}
 
   async createInvoice(createInvoicedto: Prisma.InvoiceCreateInput) {
-    const sendMail = await this.mailingService.sendInvoiceMail(
-      createInvoicedto.ServiceInfo,
-      createInvoicedto.clientEmail,
-    );
-    if (sendMail) console.log(sendMail);
+    try {
+      // const sendMail = await this.mailingService.sendInvoiceMail(
+      //   createInvoicedto.ServiceInfo,
+      //   createInvoicedto.clientEmail,
+      // );
+      // if (sendMail) console.log(sendMail);
 
-    return await this.databaseService.invoice.create({
-      data: createInvoicedto,
-    });
+      return await this.databaseService.invoice.create({
+        data: createInvoicedto,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async updateInvoice(id: number, updateInvoicedto: Prisma.InvoiceUpdateInput) {
