@@ -73,13 +73,16 @@ const Home: React.FC = () => {
     [address]
   );
 
-  // useEffect(() => {
-  //   alert(account.status);
-  //   alert(address);
-  //   alert(account.connector);
+  useEffect(() => {
+    if (address) {
+      navigate("/wallet");
+      return;
+    } else {
+      return;
+    }
 
-  //   // checkUserProfile(address);
-  // }, [address]);
+    // checkUserProfile(address);
+  }, [address]);
 
   return (
     <div className="w-full min-h-full flex justify-center bg-primary-100">
