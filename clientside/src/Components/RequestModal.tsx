@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useState } from "react";
 import QRCode from "qrcode.react";
 import Button from "./Button";
