@@ -17,7 +17,7 @@ import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import Button from "../../Components/Button";
 import axios from "axios";
 
-const contractAddress = "0x468a05df850c836ca08ad965fd5188fa4b3ba032";
+const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
 
 const sdk = new CoinbaseWalletSDK({
   appName: "ụgwọ",
