@@ -1,5 +1,5 @@
 import { createConfig, http } from "wagmi";
-import { base, baseSepolia, klaytnBaobab, sepolia } from "wagmi/chains";
+import { base, baseSepolia, sepolia } from "wagmi/chains";
 import { coinbaseWallet } from "wagmi/connectors";
 
 export function createWagmiConfig(rpcUrl: string, projectId?: string) {
@@ -13,7 +13,7 @@ export function createWagmiConfig(rpcUrl: string, projectId?: string) {
   const baseSepoliaUrl = rpcUrl.replace(/\/v1\/(.+?)\//, "/v1/base-sepolia/");
 
   return createConfig({
-    chains: [sepolia],
+    chains: [baseSepolia],
     connectors: [
       coinbaseWallet({
         appName: "ụgwọ",
@@ -22,7 +22,7 @@ export function createWagmiConfig(rpcUrl: string, projectId?: string) {
     ],
     ssr: true,
     transports: {
-      [sepolia.id]: http(),
+      [baseSepolia.id]: http(),
     },
   });
 }

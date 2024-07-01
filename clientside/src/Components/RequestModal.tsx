@@ -37,7 +37,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
     } catch (error) {
       console.error("Error fetching ETH conversion rate:", error);
     }
-  }, []);
+  }, [amount]);
 
   const ethValue = amount / usdRate;
   const totalCost = amount;
@@ -137,7 +137,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
             </div>
             <div className="mb-4 text-center">
               <p className="text-gray-700 text-sm">
-                Total Amount: USD {totalCost.toFixed(4)}
+                Total Amount: USD {totalCost}
               </p>
               <p className="text-gray-700 text-sm">Note: {truncatedNote}</p>
             </div>
