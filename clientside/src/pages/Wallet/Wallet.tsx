@@ -18,9 +18,6 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { address } = useAccount();
 
-  const { data, refetch } = useBalance({
-    address: address,
-  });
   const account = useAccount();
   const balance = useBalance({ address: account.address });
   const [profile, setProfile] = useState<string[]>([]);
@@ -32,41 +29,6 @@ const Dashboard: React.FC = () => {
     GBP: 0.75,
     EUR: 0.85,
   };
-
-  useEffect(() => {
-    alert(`${data?.formatted} ${data?.symbol}`);
-    const Ethbalance = Number(data?.formatted) || 0;
-    setEthValue(Ethbalance.toString());
-    const fetchEthValue = async () => {
-      setInterval(async () => {
-        try {
-          const rate = await getEthConversionRate();
-          setEthValue(Ethbalance.toString());
-          setUSDValue((Ethbalance * rate).toString());
-        } catch (error) {
-          console.error("Error fetching ETH conversion rate:", error);
-        }
-      }, 60000);
-    };
-    fetchEthValue();
-    alert(account.chain?.nativeCurrency.name);
-  }, [address, data?.formatted]);
-
-  const getEthConversionRate = useCallback(async () => {
-    try {
-      const rates = await axios.get(
-        `https://api.coinbase.com/v2/exchange-rates?currency=ETH`
-      );
-      if (rates.data) {
-        console.log(rates.data.data.rates["USD"]);
-        return rates.data.data.rates["USD"];
-        // setProfile(rates.data);
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [data?.formatted]);
 
   const handleModalOpen = (modalName: string): void => {
     setActiveModal(modalName);
