@@ -77,7 +77,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type="number"
                 value={amount}
                 onChange={handleAmountChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter amount to request"
               />
             </div>
@@ -89,7 +89,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type="text"
                 value={note}
                 onChange={handleNoteChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Enter a summary note"
               />
             </div>

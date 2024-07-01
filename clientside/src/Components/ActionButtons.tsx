@@ -35,7 +35,7 @@ const ActionButtons: React.FC = () => {
   return (
     <>
       <section className='mt-2 w-full max-w-md'>
-        <div className='w-full max-w-md space-x-4 m-auto flex justify-between items-center'>
+        <div className='w-full gap-5 mt-2 max-w-md space-x-4 m-auto flex justify-between items-center'>
           {/*  <div className='flex-shrink-0'>
             <Button
               className='p-6 rounded-lg bg-white text-black-600'
@@ -47,7 +47,7 @@ const ActionButtons: React.FC = () => {
           </div> */}
           <div className=' '>
             <Button
-              className='justify-center items-center mt-8 w-[200px] ss:w-[200px] max-w-md p-6 rounded-lg bg-white text-black-600 flex gap-2'
+              className='justify-center items-center mt-8 w-[140px] ss:w-[180px] max-w-md p-6 rounded-lg bg-white text-black-600 flex gap-2'
               onClick={() => handleModalOpen('invoice')}
             >
               <FontAwesomeIcon icon={faFileInvoiceDollar} className='text-blue-600 text-2xl' />
@@ -56,7 +56,7 @@ const ActionButtons: React.FC = () => {
           </div>
           <div className=''>
             <Button
-              className='justify-center items-center mt-8 w-[200px] ss:w-[200px] max-w-md p-6 rounded-lg bg-white text-black-600 flex gap-2'
+              className='justify-center items-center mt-8 w-[140px] ss:w-[180px] max-w-md p-6 rounded-lg bg-white text-black-600 flex gap-2'
               onClick={() => handleModalOpen('fund')}
             >
               <FontAwesomeIcon icon={faDollarSign} className='text-green-600 text-2xl' />
@@ -102,3 +102,5 @@ const ActionButtons: React.FC = () => {
 };
 
 export default ActionButtons;
+
+

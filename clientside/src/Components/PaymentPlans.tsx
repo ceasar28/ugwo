@@ -35,7 +35,7 @@ const PaymentPlans: React.FC = () => {
   };
 
   return (
-    <section className='mt-8 w-full max-w-md'>
+    <section className='mt-8 w-full max-w-md mb-5'>
       <h3 className='text-h6 flex justify-between items-center m-auto text-primary-400 mb-2 text-bold text-2 font-bold'>
         <p> Active Payments </p>
         {activePayments.length > 3 && (

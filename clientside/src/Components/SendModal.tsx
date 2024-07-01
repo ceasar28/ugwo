@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button";
-import { ethers } from "ethers";
+import { ethers, parseEther } from "ethers";
 import {
   useAccount,
   useBalance,
@@ -10,7 +10,6 @@ import {
   useWaitForTransactionReceipt,
   useSimulateContract,
 } from "wagmi";
-import { parseEther } from "ethers";
 import abi from "../utils/contractABI.json";
 
 const contractAddress = "0x468a05df850c836ca08ad965fd5188fa4b3ba032";

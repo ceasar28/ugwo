@@ -6,12 +6,14 @@ import Wallet from "./pages/Wallet/Wallet";
 import Profile from "./pages/profile/Profile";
 import Payment from "./pages/Payment/Payment";
 import Invoice from "./pages/Invoice/Invoice";
-import Navbar from "./Components/Navbar";
+import Navbar from "./layout/Navbar";
+import BottomNavbar from "./layout/BottonNavbar";
 
 const App: React.FC = () => {
   return (
     <Router>
       {/*  <NavbarWrapper> */}
+      <Navbar />
       <div className="min-h-screen">
         <Navbar />
         <div className="pt-16"></div>
@@ -29,6 +31,7 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
+      <BottomNavbar />
       {/* </NavbarWrapper> */}
     </Router>
   );

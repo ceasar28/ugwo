@@ -10,6 +10,7 @@ import { useAccount, useBalance } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PaymentPlans from "../../Components/PaymentPlans";
+import BottomNavbar from "../../layout/BottonNavbar";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
@@ -97,6 +98,7 @@ const Dashboard: React.FC = () => {
       {activeModal && (
         <Modal activeModal={activeModal} handleModalClose={handleModalClose} />
       )}
+      
     </div>
   );
 };

@@ -1,7 +1,6 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-
 import Button from "../../Components/Button";
 
 interface FormData {
@@ -22,6 +21,23 @@ const Profile: React.FC = () => {
     walletAddress: ""
   });
 
+  useEffect(() => {
+    // Fetch user data if needed
+    // Assuming you have a function to fetch the user data
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get("http://ugwo.onrender.com/user");
+        if (response.data) {
+          setFormData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -35,15 +51,24 @@ const Profile: React.FC = () => {
     console.log("Form Data:", formData);
 
     try {
-      const response = await axios.post("http://ugwo.onrender.com/user", formData);
+      const url = formData.walletAddress
+        ? `http://ugwo.onrender.com/user/${formData.walletAddress}`
+        : "http://ugwo.onrender.com/user";
+      const method = formData.walletAddress ? "put" : "post";
+      const response = await axios({
+        method,
+        url,
+        data: formData
+      });
+
       if (response.data) {
-        console.log("User created successfully:", response.data);
+        console.log("User profile saved successfully:", response.data);
         navigate("/wallet");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError; // Cast error to AxiosError
-        console.error("Error creating user:", axiosError);
+        console.error("Error saving user profile:", axiosError);
         console.error("Server responded with:", axiosError.response?.data);
       } else {
         console.error("Error setting up request:", error);
@@ -55,7 +80,7 @@ const Profile: React.FC = () => {
     <div className="w-full min-h-full flex justify-center bg-primary-100">
       <div className="w-[90vw] ms:w-[60vw] min-h-[80vh] ms:absolute flex flex-col justify-center items-center m-auto">
         <div className="w-[354px] text-center text-black text-[16px] sm:text-[20px] font-semibold font-Sora">
-          Create Profile
+          {formData.walletAddress ? "Update Profile" : "Create Profile"}
         </div>
         <div className="w-[58px] h-[39px] text-center text-black text-[25px] font-semibold font-['Inter']"></div>
 
@@ -69,7 +94,7 @@ const Profile: React.FC = () => {
             placeholder="Display Name"
             value={formData.displayName}
             onChange={handleChange}
-            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
+            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md bg-white text-black-600"
             required
           />
           <input
@@ -78,7 +103,7 @@ const Profile: React.FC = () => {
             placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
-            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
+            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md bg-white text-black-600"
             required
           />
           <input
@@ -87,7 +112,7 @@ const Profile: React.FC = () => {
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
-            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
+            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md bg-white text-black-600"
             required
           />
           <input
@@ -96,14 +121,14 @@ const Profile: React.FC = () => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md"
+            className="w-full h-12 mt-4 p-2 border border-gray-300 rounded-md bg-white text-black-600"
             required
           />
           <Button
             className="w-full h-12 mt-4 bg-black-600 text-white rounded-md hover:bg-black-400"
             type="submit"
           >
-            Create Profile
+            {formData.walletAddress ? "Update Profile" : "Create Profile"}
           </Button>
         </form>
       </div>
