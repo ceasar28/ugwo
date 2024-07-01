@@ -46,7 +46,8 @@ const Payment: React.FC = () => {
     setAddress(walletAddress || "");
     setAmount(parseFloat(amountETH) || 0);
     setNoteText(note || "");
-  }, [walletAddress, amountETH, note]);
+    getEthConversionRate();
+  }, [usdRate, walletAddress, amountETH, note]);
 
   const getEthConversionRate = useCallback(async () => {
     try {
@@ -72,8 +73,8 @@ const Payment: React.FC = () => {
       address: contractAddress,
       abi: abi,
       functionName: "sendPayment",
-      args: ["0xaCfd8d7B61DDc02E9c8777475987A0717aEbA4Bd", `${note}`],
-      value: parseEther(`${convertedAmount}`),
+      args: [walletAddress, `${note}`],
+      value: parseEther(`${convertedAmount.toFixed(3)}`),
     });
 
   // Get the write function
@@ -113,8 +114,11 @@ const Payment: React.FC = () => {
       await createWallet();
     }
     if (userAddress) {
-      await getEthConversionRate();
-      handleSend();
+      const rate = await getEthConversionRate();
+      if (rate) {
+        handleSend();
+        handleModalClose();
+      }
       handleModalClose();
     }
   };
@@ -130,11 +134,14 @@ const Payment: React.FC = () => {
           </p>
           <p className="text-gray-700 text-sm flex justify-between">
             <span>Amount (USD):</span>
-            <span>{amount.toFixed(2)}</span>
+            <span>{amount}</span>
           </p>
           <p className="text-gray-700 text-sm flex justify-between">
-            <span>Note:</span>
+            <span>Details:</span>
             <span>{noteText}</span>
+          </p>
+          <p className="text-gray-700 text-sm flex justify-between">
+            <span>NOTE: ETH equivalent of the USD will be sent</span>
           </p>
         </div>
         <div className="flex justify-end">
