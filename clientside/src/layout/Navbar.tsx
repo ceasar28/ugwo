@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 const Navbar: React.FC = () => {
   const [navbarOpacity, setNavbarOpacity] = useState<number>(1);
 
@@ -20,21 +19,25 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
+
   return (
-    <nav
-      className="bg-primary-100 fixed top-0 left-0 w-full z-50 transition-opacity duration-300"
-      style={{ opacity: navbarOpacity }}
-    >
-      <div className="w-full p-4 flex justify-center items-center">
-        <Link to="/">
-          <div className="flex items-center cursor-pointer">
-            <div className="text-center item-center text-primary-600 text-2xl font-semibold font-['Inter']">
-              ụgwọ
+    <>
+      <nav
+        className="bg-primary-100 fixed top-0 left-0 w-full z-50 transition-opacity duration-300"
+        style={{ opacity: navbarOpacity }}
+      >
+        <div className="w-[70vw] p-4 justify-between m-auto items-center">
+          <Link to="/">
+            <div className=" items-center cursor-pointer">
+              <div className="text-center item-center text-primary-600 text-2xl font-semibold font-['Inter']">
+                ụgwọ
+              </div>
             </div>
-          </div>
-        </Link>
-      </div>
-    </nav>
+          </Link>
+        </div>
+      </nav>
+     
+    </>
   );
 };
 

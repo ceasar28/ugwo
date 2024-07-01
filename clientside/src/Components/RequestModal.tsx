@@ -36,23 +36,16 @@ const RequestModal: React.FC<RequestModalProps> = ({
     setStep(2);
   };
 
-  /*   const handleCopyLink = () => {
-    const shareableLink = `http://example.com/request/${walletAddress}/${amount}/${note}`;
-    navigator.clipboard.writeText(shareableLink).then(() => {
-      alert('Link copied to clipboard!');
-    }).catch(() => {
-      alert('Failed to copy the link.');
-    });
-  }; */
-
   const truncatedNote = note.length > 20 ? `${note.substring(0, 20)}...` : note;
+
+  const isNextDisabled = amount <= 0;
 
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
       <div className='bg-primary-100 p-6 rounded-lg shadow-4xl w-full max-w-md'>
         {step === 1 ? (
           <>
-            <h2 className='text-h5 mb-4'>Request Payment</h2>
+            <h2 className='text-h5 mb-4 text-black-600'>Request Payment</h2>
             <div className='mb-4'>
               <p className='text-gray-700 text-sm font-bold'>
                 Available Balance: ETH {availableBalance.toFixed(4)}
@@ -66,7 +59,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type='number'
                 value={amount}
                 onChange={handleAmountChange}
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                 placeholder='Enter amount to request'
               />
             </div>
@@ -78,7 +71,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
                 type='text'
                 value={note}
                 onChange={handleNoteChange}
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                 placeholder='Enter a summary note'
               />
             </div>
@@ -92,15 +85,16 @@ const RequestModal: React.FC<RequestModalProps> = ({
               </p>
             </div>
             <div className='flex justify-end gap-2'>
-            <Button
-                className='bg-blue-500 text-white py-2 px-4 rounded'
+              <Button
+                className='bg-gray-500 text-white py-2 px-4 rounded'
                 onClick={handleModalClose}
               >
-                Cancle
+                Cancel
               </Button>
               <Button
-                className='bg-blue-500 text-white py-2 px-4 rounded'
+                className={`bg-blue-500 text-white py-2 px-4 rounded ${isNextDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleNextStep}
+                disabled={isNextDisabled}
               >
                 Next
               </Button>
@@ -129,16 +123,10 @@ const RequestModal: React.FC<RequestModalProps> = ({
               <p className='text-gray-700 text-sm'>
                 Shareable Link:{' '}
                 <a
-                  href={`http://example.com/request/${walletAddress}/${totalCost}/${truncatedNote}`}
+                  href={`${window.location.origin}/payment/${walletAddress}/${totalCost}/${truncatedNote}`}
                   className='text-blue-500'
-                >{`http://example.com/request/${walletAddress}/${totalCost}/${truncatedNote}`}</a>
+                >{`${window.location.origin}/payment/${walletAddress}/${totalCost}/${truncatedNote}`}</a>
               </p>
-              {/*  <button
-                onClick={handleCopyLink}
-                className='ml-2 text-gray-700 text-sm font-bold border border-gray-700 rounded px-2 py-1'
-              >
-                Copy
-              </button> */}
             </div>
             <div className='flex justify-end'>
               <Button

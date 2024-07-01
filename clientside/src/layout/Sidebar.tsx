@@ -47,7 +47,7 @@ const Sidebar = () => {
             <NavLink
               to={item.path}
               key={index}
-              className='flex bg-[--bg-color-color] items-center gap-2 py-3'
+              className='flex text-black-600 items-center gap-2 py-3'
             >
               <img src={item.icon} alt='' className='w-[25px]' />
               <p style={{ display: open ? 'block' : 'none' }}>{item.name}</p>

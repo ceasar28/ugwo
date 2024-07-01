@@ -1,9 +1,9 @@
 import Logo from "../../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
 // import { Avatar } from "@coinbase/onchainkit/identity";
 // import { ConnectAccount } from "@coinbase/onchainkit/wallet";
 import { useAccount, useDisconnect, useConnect, useChainId } from "wagmi";
-import React, { useCallback } from "react";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletLogo } from "../../utils/coinBaseWalletLogo";
 
@@ -21,6 +21,8 @@ const Connect = () => {
   const { connectors, connect, status, data } = useConnect();
   const { disconnect } = useDisconnect();
   const chainId = useChainId();
+  const navigate = useNavigate();
+  const [disconnected, setDisconnected] = useState(false);
 
   // if (address) {
   //   disconnect();
@@ -40,7 +42,14 @@ const Connect = () => {
 
   const handleDisconnectWallet = useCallback(() => {
     disconnect();
+    setDisconnected(true);
   }, [disconnect]);
+
+  useEffect(() => {
+    if (disconnected) {
+      navigate("/");
+    }
+  }, [disconnected, navigate]);
 
   //   const createWallet = useCallback(async () => {
   //     try {
