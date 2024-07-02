@@ -1,29 +1,69 @@
 import React, { useState, useCallback, useEffect } from "react";
-import BalanceSection from "../../Components/BalanceSection";
-import ActionButtons from "../../Components/ActionButtons";
-import FundSection from "../../Components/FundSection";
-import WithdrawSection from "../../Components/WithdrawSection";
-import ActiveSubList from "../../Components/ActiveSubList";
-import PaymentList from "../../Components/TransactionsList";
-import Modal from "../../Components/Modal";
-import { useAccount, useBalance } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAccount, useBalance, useReadContracts } from "wagmi";
+import abi from "../../utils/contractABI.json";
+import BalanceSection from "../../Components/BalanceSection";
+import ActionButtons from "../../Components/ActionButtons";
+import PaymentList from "../../Components/TransactionsList";
+import ActiveSubList from "../../Components/ActiveSubList";
 import PaymentPlans from "../../Components/PaymentPlans";
+import Modal from "../../Components/Modal";
 import BottomNavbar from "../../layout/BottonNavbar";
+
+const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
 
 const Dashboard: React.FC = () => {
   const [ethValue, setEthValue] = useState<string>("0");
   const [USDValue, setUSDValue] = useState<string>("0");
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [profile, setProfile] = useState<string[]>([]);
+  const [activeSubscription, setActiveSubscription] = useState<any[]>([]);
+  const [activePlans, setActivePlans] = useState<any[]>([]);
   const navigate = useNavigate();
   const { address } = useAccount();
 
-  const account = useAccount();
-  const balance = useBalance({ address: account.address });
-  const [profile, setProfile] = useState<string[]>([]);
+  const { data: balanceData } = useBalance({ address });
 
-  const balanceUSD = 4500.0;
+  const {
+    data: allData,
+    isLoading: multipleDataLoading,
+    error: multipleReadingError,
+  } = useReadContracts({
+    contracts: [
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getUserPaymentHistory",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getUserReceivedPaymentHistory",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getSubscriptionsByAddress",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "getPlansByAddress",
+        args: [address],
+      },
+      {
+        address: contractAddress,
+        abi: abi,
+        functionName: "owner",
+        args: [],
+      },
+    ],
+  });
+
   const conversionRates: { [key: string]: number } = {
     USD: 1,
     NGN: 500,
@@ -40,13 +80,12 @@ const Dashboard: React.FC = () => {
   };
 
   const checkUserProfile = useCallback(
-    async (walletAddress: any) => {
+    async (walletAddress: string) => {
       try {
         const response = await axios.get(
           `https://ugwo.onrender.com/user/get-user/${walletAddress}`
         );
         if (response.data) {
-          console.log(response.data);
           setProfile(response.data);
           navigate("/wallet");
         } else {
@@ -59,25 +98,14 @@ const Dashboard: React.FC = () => {
     },
     [navigate]
   );
-  /* useEffect(() => {
-    // Check if there is no wallet address
+
+  useEffect(() => {
     if (!address) {
       navigate("/");
     } else {
-      // If there is a wallet address, check user profile
-      checkUserProfile(address);
+      // checkUserProfile(address);
     }
-  }, [address, navigate, checkUserProfile]); */
-
-  // useEffect(() => {
-  //   // Check if there is no wallet address
-  //   if (!address) {
-  //     navigate("/");
-  //   } else {
-  //     // If there is a wallet address, check user profile
-  //     checkUserProfile(address);
-  //   }
-  // }, [address, navigate, checkUserProfile]);
+  }, [address, navigate, checkUserProfile]);
 
   return (
     <div className="min-h-screen bg-primary-100 font-Inter">
@@ -87,10 +115,7 @@ const Dashboard: React.FC = () => {
           ethValue={ethValue}
           conversionRates={conversionRates}
         />
-
         <ActionButtons />
-        {/*  <FundSection handleModalOpen={handleModalOpen} />
-        <WithdrawSection handleModalOpen={handleModalOpen} /> */}
         <PaymentList />
         <ActiveSubList />
         <PaymentPlans />
@@ -98,7 +123,6 @@ const Dashboard: React.FC = () => {
       {activeModal && (
         <Modal activeModal={activeModal} handleModalClose={handleModalClose} />
       )}
-      
     </div>
   );
 };

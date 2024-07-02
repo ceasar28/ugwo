@@ -41,7 +41,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Plan[]",
+        "internalType": "struct Ugwo.Plan[]",
         "components": [
           { "name": "creator", "type": "address", "internalType": "address" },
           {
@@ -66,7 +66,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Subscription[]",
+        "internalType": "struct Ugwo.Subscription[]",
         "components": [
           {
             "name": "subscriptionId",
@@ -114,21 +114,13 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Payment[]",
+        "internalType": "struct Ugwo.Payment[]",
         "components": [
           { "name": "from", "type": "address", "internalType": "address" },
           { "name": "to", "type": "address", "internalType": "address" },
           { "name": "amount", "type": "uint256", "internalType": "uint256" },
-          {
-            "name": "description",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
-            "name": "timestamp",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
+          { "name": "description", "type": "string", "internalType": "string" },
+          { "name": "timestamp", "type": "uint256", "internalType": "uint256" }
         ]
       }
     ],
@@ -144,7 +136,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Subscription[]",
+        "internalType": "struct Ugwo.Subscription[]",
         "components": [
           {
             "name": "subscriptionId",
@@ -192,7 +184,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Plan[]",
+        "internalType": "struct Ugwo.Plan[]",
         "components": [
           { "name": "creator", "type": "address", "internalType": "address" },
           {
@@ -219,7 +211,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Plan[]",
+        "internalType": "struct Ugwo.Plan[]",
         "components": [
           { "name": "creator", "type": "address", "internalType": "address" },
           {
@@ -244,7 +236,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Subscription[]",
+        "internalType": "struct Ugwo.Subscription[]",
         "components": [
           {
             "name": "subscriptionId",
@@ -294,7 +286,7 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Subscription[]",
+        "internalType": "struct Ugwo.Subscription[]",
         "components": [
           {
             "name": "subscriptionId",
@@ -344,21 +336,13 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Payment[]",
+        "internalType": "struct Ugwo.Payment[]",
         "components": [
           { "name": "from", "type": "address", "internalType": "address" },
           { "name": "to", "type": "address", "internalType": "address" },
           { "name": "amount", "type": "uint256", "internalType": "uint256" },
-          {
-            "name": "description",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
-            "name": "timestamp",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
+          { "name": "description", "type": "string", "internalType": "string" },
+          { "name": "timestamp", "type": "uint256", "internalType": "uint256" }
         ]
       }
     ],
@@ -374,21 +358,13 @@
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct SubscriptionManager.Payment[]",
+        "internalType": "struct Ugwo.Payment[]",
         "components": [
           { "name": "from", "type": "address", "internalType": "address" },
           { "name": "to", "type": "address", "internalType": "address" },
           { "name": "amount", "type": "uint256", "internalType": "uint256" },
-          {
-            "name": "description",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
-            "name": "timestamp",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
+          { "name": "description", "type": "string", "internalType": "string" },
+          { "name": "timestamp", "type": "uint256", "internalType": "uint256" }
         ]
       }
     ],
@@ -488,11 +464,7 @@
         "internalType": "uint256"
       },
       { "name": "planId", "type": "uint256", "internalType": "uint256" },
-      {
-        "name": "payer",
-        "type": "address",
-        "internalType": "address payable"
-      },
+      { "name": "payer", "type": "address", "internalType": "address payable" },
       { "name": "isActive", "type": "bool", "internalType": "bool" },
       {
         "name": "totalAmountPaid",

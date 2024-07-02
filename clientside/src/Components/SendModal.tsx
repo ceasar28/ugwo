@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button";
-import { ethers, parseEther } from "ethers";
+import { ethers, parseEther, parseUnits } from "ethers";
 import {
   useAccount,
   useBalance,
@@ -12,7 +12,7 @@ import {
 } from "wagmi";
 import abi from "../utils/contractABI.json";
 
-const contractAddress = "0x468a05df850c836ca08ad965fd5188fa4b3ba032";
+const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
 
 interface SendModalProps {
   handleModalClose: () => void;
@@ -35,7 +35,7 @@ const checkWalletExistence = (walletNameOrAddress: string) => {
 
 const SendModal: React.FC<SendModalProps> = ({ handleModalClose }) => {
   const [address, setAddress] = useState<string>("");
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<string>("");
   const [walletInfo, setWalletInfo] = useState<string>("");
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose }) => {
       functionName: "sendPayment",
       args: [address, `Sent ${amount} to ${address}`],
       // send ETH according to the price of the NFT:
-      value: parseEther(`${amount}`),
+      value: parseEther(`${amount}` || "0"),
     });
 
   // Get the write function
@@ -73,7 +73,7 @@ const SendModal: React.FC<SendModalProps> = ({ handleModalClose }) => {
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
+    const value = e.target.value;
     setAmount(value);
   };
 

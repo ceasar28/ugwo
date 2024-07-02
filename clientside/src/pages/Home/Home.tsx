@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +17,9 @@ import {
   Name,
 } from "@coinbase/onchainkit/identity";
 import { ConnectAccount } from "@coinbase/onchainkit/wallet";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./toast.css";
 
 const sdk = new CoinbaseWalletSDK({
   appName: "ụgwọ",
@@ -39,6 +43,14 @@ const Home: React.FC = () => {
     e?.preventDefault();
     // connect wallet
     await createWallet();
+
+    console.log("This is status  ", status);
+
+    // toast.promise(myPromise, {
+    //   pending: "Promise is pending",
+    //   success: "Promise  Loaded",
+    //   error: "error",
+    // });
   };
 
   const createWallet = useCallback(async () => {
@@ -73,6 +85,13 @@ const Home: React.FC = () => {
     [address]
   );
 
+  const showToastMessage = () => {
+    toast("Success Notification !", {
+      position: "top-center",
+      className: "toast-message",
+    });
+  };
+
   useEffect(() => {
     if (address) {
       navigate("/wallet");
@@ -88,6 +107,7 @@ const Home: React.FC = () => {
     <div className="w-full min-h-full flex justify-center bg-primary-100">
       {/* <Navbar disconnect={handleDisconnectWallet} />
       <Button onClick={handleDisconnectWallet}>Disconnect</Button> */}
+      <ToastContainer />
       <div className="w-[90vw] ms:w-[60vw] min-h-[80vh] ms:absolute flex flex-col justify-center items-center m-auto">
         <div className="w-[354px] text-center text-black text-[16px] sm:text-[20px] font-semibold font-Sora">
           Make Seamless Payment
