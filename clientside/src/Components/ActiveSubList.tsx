@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import ModalActive from "./ModalActive"; // Assuming you have a Modal component for displaying content
+import { useAccount, useBalance, useReadContracts } from "wagmi";
+import abi from "../utils/contractABI.json";
+
+const contractAddress = "0xDA640C8b7495577DAC1bee511092320812cDEc5E";
 
 const ActiveSubList: React.FC = () => {
   const [showAllModal, setShowAllModal] = useState(false);
